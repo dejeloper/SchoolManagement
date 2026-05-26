@@ -49,13 +49,13 @@ CREATE TABLE enrollments (
  
 -- Foreign Keys 
 ALTER TABLE enrollments 
-ADD CONSTRAINT fk_enrollments_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE;
+ADD CONSTRAINT fk_enrollments_student FOREIGN KEY (student_id) REFERENCES students(id);
 
 ALTER TABLE enrollments
-ADD CONSTRAINT fk_enrollments_subject FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE;
+ADD CONSTRAINT fk_enrollments_subject FOREIGN KEY (subject_id) REFERENCES subjects(id);
 
 ALTER TABLE subjects
-ADD CONSTRAINT fk_subjects_teacher FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE RESTRICT;
+ADD CONSTRAINT fk_subjects_teacher FOREIGN KEY (teacher_id) REFERENCES teachers(id);
 
 -- Unique Constraints 
 ALTER TABLE enrollments ADD CONSTRAINT unique_student_subject UNIQUE (student_id, subject_id) ;
@@ -66,3 +66,41 @@ CREATE INDEX idx_subjects_teacher_id ON subjects(teacher_id);
 CREATE INDEX idx_enrollments_student_id ON enrollments(student_id); 
 
 CREATE INDEX idx_enrollments_subject_id ON enrollments(subject_id); 
+
+
+-- Sample Data Insertion
+-- 10 Students
+INSERT INTO students (name, surname, email) VALUES
+('Jhonatan', 'Guerrero', 'jhonatan.guerrero@example.com'),
+('Maria', 'Lopez', 'maria.lopez@example.com'),
+('Carlos', 'Perez', 'carlos.perez@example.com'),
+('Ana', 'Gomez', 'ana.gomez@example.com'),
+('Luis', 'Martinez', 'luis.martinez@example.com'),
+('Sofia', 'Rodriguez', 'sofia.rodriguez@example.com'),
+('Diego', 'Sanchez', 'diego.sanchez@example.com'),
+('Valentina', 'Fernandez', 'valentina.fernandez@example.com'),
+('Mateo', 'Gonzalez', 'mateo.gonzalez@example.com'),
+('Isabella', 'Ramirez', 'isabella.ramirez@example.com');
+
+
+-- 5 Teachers
+INSERT INTO teachers (name, surname, email) VALUES
+('Laura', 'Hernandez', 'doc.laura.hernandez@example.com'),
+('Andres', 'Vargas', 'doc.andres.vargas@example.com'),
+('Sofia', 'Mendoza', 'doc.sofia.mendoza@example.com'),
+('Diego', 'Castro', 'doc.diego.castro@example.com'),
+('Valentina', 'Rios', 'doc.valentina.rios@example.com');
+
+-- 10 Subjects
+INSERT INTO subjects (name, description, teacher_id) VALUES
+('Matemáticas', 'Curso de matemáticas básicas', 1),
+('Física', 'Curso de física clásica', 1),
+('Historia', 'Curso de historia mundial', 2),
+('Geografía', 'Curso de geografía mundial', 2),
+('Literatura', 'Curso de literatura clásica', 3),
+('Inglés', 'Curso de inglés avanzado', 3),
+('Biología', 'Curso de biología general', 4),
+('Química', 'Curso de química orgánica', 4),
+('Arte', 'Curso de arte contemporáneo', 5),
+('Música', 'Curso de música clásica', 5);
+
