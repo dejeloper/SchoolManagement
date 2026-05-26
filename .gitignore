@@ -1,0 +1,67 @@
+# Build
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# ASP.NET Core
+appsettings.Development.json
+
+# Entity Framework
+*.dbmdl
+*.jfm
+*.psess
+*.vsp
+*.vspx
+
+# NuGet
+*.nupkg
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Node modules (Angular frontend)
+node_modules/
+
+# Environment variables
+.env
+
+# Publish output
+publish/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Test Results
+TestResults/
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Temporary files
+*.tmp
+*.temp
