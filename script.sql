@@ -1,69 +1,68 @@
+-- Database: school_management
+create database school_management;
+use school_management;
+
 -- Table: Students
 
-CREATE TABLE Students (
+CREATE TABLE students (
 		id INT PRIMARY KEY AUTO_INCREMENT,
 		name VARCHAR(100) NOT NULL,
 		surname VARCHAR(100) NOT NULL,
 		email VARCHAR(100) UNIQUE NOT NULL,
-		enabled BOOLEAN DEFAULT TRUE,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		deleted_at TIMESTAMP NULL 
+		deleted_at TIMESTAMP NULL  
 );
 
 -- Table: Teachers
-CREATE TABLE Teachers (
+CREATE TABLE teachers (
 		id INT PRIMARY KEY AUTO_INCREMENT,
 		name VARCHAR(100) NOT NULL,
 		surname VARCHAR(100) NOT NULL,
 		email VARCHAR(100) UNIQUE NOT NULL, 
-		enabled BOOLEAN DEFAULT TRUE,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		deleted_at TIMESTAMP NULL
+		deleted_at TIMESTAMP NULL  
 );
 
 -- Table: Subjects
-CREATE TABLE Subjects (
+CREATE TABLE subjects (
 		id INT PRIMARY KEY AUTO_INCREMENT,
-		name VARCHAR(100) NOT NULL,
+		name VARCHAR(100) UNIQUE NOT NULL,
 		description TEXT,
 		teacher_id INT NOT NULL,
-		credits INT NOT NULL,
-		enabled BOOLEAN DEFAULT TRUE,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		credits INT NOT NULL DEFAULT 3,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		deleted_at TIMESTAMP NULL
+		deleted_at TIMESTAMP NULL 
 );
 
--- Table: enrollments
+-- Table: Enrollments
 CREATE TABLE enrollments (
 		id INT PRIMARY KEY AUTO_INCREMENT,
 		student_id INT NOT NULL,
 		subject_id INT NOT NULL,  
-		enabled BOOLEAN DEFAULT TRUE,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		deleted_at TIMESTAMP NULL
+		deleted_at TIMESTAMP NULL 
 );
  
 -- Foreign Keys 
 ALTER TABLE enrollments 
-ADD CONSTRAINT fk_enrollments_student FOREIGN KEY (student_id) REFERENCES Students(id);
+ADD CONSTRAINT fk_enrollments_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE;
 
 ALTER TABLE enrollments
-ADD CONSTRAINT fk_enrollments_subject FOREIGN KEY (subject_id) REFERENCES Subjects(id); 
+ADD CONSTRAINT fk_enrollments_subject FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE;
 
-ALTER TABLE Subjects
-ADD CONSTRAINT fk_subjects_teacher FOREIGN KEY (teacher_id) REFERENCES Teachers(id);
+ALTER TABLE subjects
+ADD CONSTRAINT fk_subjects_teacher FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE RESTRICT;
 
--- Unique Constraints
-ALTER TABLE Students ADD CONSTRAINT unique_student_email UNIQUE (email);
+-- Unique Constraints 
+ALTER TABLE enrollments ADD CONSTRAINT unique_student_subject UNIQUE (student_id, subject_id) ;
 
-ALTER TABLE Subjects ADD CONSTRAINT unique_subject_name UNIQUE (name);
+-- Indexes 
+CREATE INDEX idx_subjects_teacher_id ON subjects(teacher_id);
+ 
+CREATE INDEX idx_enrollments_student_id ON enrollments(student_id); 
 
-ALTER TABLE Teachers ADD CONSTRAINT unique_teacher_email UNIQUE (email);
-
-ALTER TABLE enrollments ADD CONSTRAINT unique_student_subject UNIQUE (student_id, subject_id);
-
-
+CREATE INDEX idx_enrollments_subject_id ON enrollments(subject_id); 
