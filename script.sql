@@ -1,10 +1,11 @@
 -- Database: school_management
-create database school_management;
-use school_management;
+-- Engine: InnoDB MySQL
+CREATE DATABASE IF NOT EXISTS school_management;
+USE school_management;
 
 -- Table: Students
 
-CREATE TABLE students (
+CREATE TABLE IF NOT EXISTS students (
 		id INT PRIMARY KEY AUTO_INCREMENT,
 		name VARCHAR(100) NOT NULL,
 		surname VARCHAR(100) NOT NULL,
@@ -15,7 +16,7 @@ CREATE TABLE students (
 );
 
 -- Table: Teachers
-CREATE TABLE teachers (
+CREATE TABLE IF NOT EXISTS teachers (
 		id INT PRIMARY KEY AUTO_INCREMENT,
 		name VARCHAR(100) NOT NULL,
 		surname VARCHAR(100) NOT NULL,
@@ -26,7 +27,7 @@ CREATE TABLE teachers (
 );
 
 -- Table: Subjects
-CREATE TABLE subjects (
+CREATE TABLE IF NOT EXISTS subjects (
 		id INT PRIMARY KEY AUTO_INCREMENT,
 		name VARCHAR(100) UNIQUE NOT NULL,
 		description TEXT,
@@ -38,7 +39,7 @@ CREATE TABLE subjects (
 );
 
 -- Table: Enrollments
-CREATE TABLE enrollments (
+CREATE TABLE IF NOT EXISTS enrollments (
 		id INT PRIMARY KEY AUTO_INCREMENT,
 		student_id INT NOT NULL,
 		subject_id INT NOT NULL,  
@@ -61,11 +62,11 @@ ADD CONSTRAINT fk_subjects_teacher FOREIGN KEY (teacher_id) REFERENCES teachers(
 ALTER TABLE enrollments ADD CONSTRAINT unique_student_subject UNIQUE (student_id, subject_id) ;
 
 -- Indexes 
-CREATE INDEX idx_subjects_teacher_id ON subjects(teacher_id);
+CREATE INDEX IF NOT EXISTS idx_subjects_teacher_id ON subjects(teacher_id);
  
-CREATE INDEX idx_enrollments_student_id ON enrollments(student_id); 
+CREATE INDEX IF NOT EXISTS idx_enrollments_student_id ON enrollments(student_id); 
 
-CREATE INDEX idx_enrollments_subject_id ON enrollments(subject_id); 
+CREATE INDEX IF NOT EXISTS idx_enrollments_subject_id ON enrollments(subject_id); 
 
 
 -- Sample Data Insertion
