@@ -7,9 +7,10 @@ var startup = new Startup(builder.Configuration);
 startup.ConfigureServices(builder.Services);
 
 // Importacion de servicios
-builder.Services.AddScoped<StudentService>();
-builder.Services.AddScoped<TeacherService>();
-builder.Services.AddScoped<SubjectService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<ISubjectService, SubjectService>(); 
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
