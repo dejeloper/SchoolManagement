@@ -6,86 +6,93 @@ namespace SchoolManagementApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SubjectsController : ControllerBase
+public class SubjectsController(ISubjectService subjectService) : ControllerBase
 {
-    private readonly SubjectService _subjectService;
+    private readonly ISubjectService _subjectService = subjectService;
 
-    public SubjectsController(SubjectService subjectService)
-    {
-        _subjectService = subjectService;
-    }
-
-    // GET: api/subject
+    // GET: api/subjects
     [HttpGet]
-    public async Task<ActionResult<List<SubjectResponseDto>>> GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var subjects = await _subjectService.GetAllAsync();
-        return Ok(subjects);
-    }
+        var result = await _subjectService.GetAllAsync();
 
-    // GET: api/subject/{id}
-    [HttpGet("{id}")]
-    public async Task<ActionResult<SubjectResponseDto>> GetById(int id)
-    {
-        var subject = await _subjectService.GetByIdAsync(id);
-        if (subject == null)
+        if (result.Error)
         {
-            return NotFound(new
-            {
-                message = "Materia no encontrada."
-            });
+            return StatusCode(result.StatusCode, result);
         }
-        return Ok(subject);
+
+        return Ok(result);
     }
 
-    // POST: api/subject
+    // GET: api/subjects/{id}
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _subjectService.GetByIdAsync(id);
+
+        if (result.Error)
+        {
+            return StatusCode(result.StatusCode, result);
+        }
+
+        return Ok(result);
+    }
+
+    // GET: api/subjects/teacher/{teacherId}
+    [HttpGet("teacher/{teacherId:int}")]
+    public async Task<IActionResult> GetByTeacherId(int teacherId)
+    {
+        var result = await _subjectService.GetByTeacherIdAsync(teacherId);
+        if (result.Error)
+        {
+            return StatusCode(result.StatusCode, result);
+        }
+        return Ok(result);
+    }
+
+    // POST: api/subjects
     [HttpPost]
-    public async Task<ActionResult<SubjectResponseDto>> Create([FromBody] CreateSubjectDto createSubjectDto)
+    public async Task<IActionResult> Create([FromBody] CreateSubjectDto createSubjectDto)
     {
-        try
+        var result = await _subjectService.CreateAsync(createSubjectDto);
+
+        if (result.Error)
         {
-            var subject = await _subjectService.CreateAsync(createSubjectDto);
-            return CreatedAtAction(nameof(GetById), new { id = subject.Id }, subject);
+            return StatusCode(result.StatusCode, result);
         }
-        catch (Exception ex)
-        {
-            return BadRequest(new
-            {
-                message = ex.Message
-            });
-        }
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = result.Value!.Id },
+            result
+        );
     }
 
-    // PUT: api/subject/{id}
-    [HttpPut("{id}")]
-    public async Task<ActionResult<SubjectResponseDto>> Update(int id, [FromBody] UpdateSubjectDto updateSubjectDto)
+    // PUT: api/subjects/{id}
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateSubjectDto updateSubjectDto)
     {
+        var result = await _subjectService.UpdateAsync(id, updateSubjectDto);
 
-        var subject = await _subjectService.UpdateAsync(id, updateSubjectDto);
-        if (subject == null)
+        if (result.Error)
         {
-            return NotFound(new
-            {
-                message = "Materia no encontrada."
-            });
+            return StatusCode(result.StatusCode, result);
         }
-        return Ok(subject);
+
+        return Ok(result);
     }
 
-    // DELETE: api/subject/{id}
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<bool>> Delete(int id)
+    // DELETE: api/subjects/{id}
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
     {
+        var result = await _subjectService.SoftDeleteAsync(id);
 
-        var deleted = await _subjectService.SoftDeleteAsync(id);
-        if (!deleted)
+        if (result.Error)
         {
-            return NotFound(new
-            {
-                message = "Materia no encontrada."
-            });
+            return StatusCode(result.StatusCode, result);
         }
 
-        return NoContent();
+        return Ok(result);
     }
 }

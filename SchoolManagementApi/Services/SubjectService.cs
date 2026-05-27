@@ -1,40 +1,55 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolManagementApi.Data;
+using SchoolManagementApi.DTOs.Common;
 using SchoolManagementApi.DTOs.Subjects;
 using SchoolManagementApi.Entities;
 
 namespace SchoolManagementApi.Services;
 
-public class SubjectService
+public class SubjectService(AppDbContext context) : ISubjectService
 {
-    private readonly AppDbContext _context;
+    private readonly AppDbContext _context = context;
 
-    public SubjectService(AppDbContext context)
+    public async Task<Result<List<SubjectResponseDto>>> GetAllAsync()
     {
-        _context = context;
+        try
+        {
+            var subjects = await _context.Subjects
+                .Where(s => s.DeletedAt == null)
+                .Select(s => new SubjectResponseDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Description = s.Description,
+                    Credits = s.Credits,
+                    TeacherId = s.TeacherId,
+                    TeacherName = s.Teacher.Name
+                })
+                .ToListAsync();
+
+            return Result<List<SubjectResponseDto>>.Success(
+                subjects,
+                subjects.Count == 0
+                    ? "Materia no encontrada."
+                    : "Materias obtenidas exitosamente.",
+                200
+            );
+        }
+        catch (Exception ex)
+        {
+            return Result<List<SubjectResponseDto>>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
     }
 
-    // Get All
-    public async Task<List<SubjectResponseDto>> GetAllAsync()
+    public async Task<Result<SubjectResponseDto>> GetByIdAsync(int id)
     {
-        return await _context.Subjects
-            .Select(s => new SubjectResponseDto
-            {
-                Id = s.Id,
-                Name = s.Name,
-                Description = s.Description,
-                Credits = s.Credits,
-                TeacherId = s.TeacherId,
-                TeacherName = s.Teacher.Name
-            })
-            .ToListAsync();
-    }
-
-    // Get By Id
-    public async Task<SubjectResponseDto?> GetByIdAsync(int id)
-    {
-        return await _context.Subjects
-                .Where(s => s.Id == id)
+        try
+        {
+            var subject = await _context.Subjects
+                .Where(s => s.Id == id && s.DeletedAt == null)
                 .Select(s => new SubjectResponseDto
                 {
                     Id = s.Id,
@@ -45,94 +60,212 @@ public class SubjectService
                     TeacherName = s.Teacher.Name
                 })
                 .FirstOrDefaultAsync();
+
+            if (subject == null)
+            {
+                return Result<SubjectResponseDto>.Failure(
+                    "Materia no encontrada.",
+                    404
+                );
+            }
+
+            return Result<SubjectResponseDto>.Success(
+                subject,
+                "Materia obtenida exitosamente.",
+                200
+            );
+        }
+        catch (Exception ex)
+        {
+            return Result<SubjectResponseDto>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
     }
 
-    // Create
-    public async Task<SubjectResponseDto> CreateAsync(CreateSubjectDto dto)
+    public async Task<Result<List<SubjectResponseDto>>> GetByTeacherIdAsync(int teacherId)
     {
-        var subjectExists = await _context.Subjects
-        .IgnoreQueryFilters() // -> Ignora los filtros globales, como el de soft delete
-        .AnyAsync(s => s.Name == dto.Name);
-
-        if (subjectExists)
+        try
         {
-            throw new Exception("La materia ya existe.");
+            var subjects = await _context.Subjects
+                .Where(s => s.TeacherId == teacherId && s.DeletedAt == null)
+                .Select(s => new SubjectResponseDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Description = s.Description,
+                    Credits = s.Credits,
+                    TeacherId = s.TeacherId,
+                    TeacherName = s.Teacher.Name
+                })
+                .ToListAsync();
+            return Result<List<SubjectResponseDto>>.Success(
+                subjects,
+                subjects.Count == 0
+                    ? "Materia no encontrada."
+                    : "Materias obtenidas exitosamente.",
+                200
+            );
         }
-
-        var subject = new Subject
+        catch (Exception ex)
         {
-            Name = dto.Name,
-            Description = dto.Description,
-            Credits = dto.Credits,
-            TeacherId = dto.TeacherId,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-
-        _context.Subjects.Add(subject);
-
-        await _context.SaveChangesAsync();
-
-        return new SubjectResponseDto
-        {
-            Id = subject.Id,
-            Name = subject.Name,
-            Description = subject.Description,
-            Credits = subject.Credits,
-            TeacherId = subject.TeacherId,
-            TeacherName = (await _context.Teachers.FindAsync(subject.TeacherId))?.Name ?? "Desconocido"
-        };
+            return Result<List<SubjectResponseDto>>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
     }
 
-    // Update
-    public async Task<SubjectResponseDto?> UpdateAsync(int id, UpdateSubjectDto updateSubjectDto)
+    public async Task<Result<SubjectResponseDto>> CreateAsync(CreateSubjectDto dto)
     {
-        var subject = await _context.Subjects
-        .FirstOrDefaultAsync(subject => subject.Id == id);
-
-        if (subject == null) return null;
-
-        if (updateSubjectDto.Name is not null)
+        try
         {
-            subject.Name = updateSubjectDto.Name;
+            var subjectExists = await _context.Subjects
+                .IgnoreQueryFilters()
+                .AnyAsync(s => s.Name == dto.Name);
+
+            if (subjectExists)
+            {
+                return Result<SubjectResponseDto>.Failure(
+                    "La materia ya existe.",
+                    400
+                );
+            }
+
+            var subject = new Subject
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                Credits = dto.Credits,
+                TeacherId = dto.TeacherId,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _context.Subjects.Add(subject);
+            await _context.SaveChangesAsync();
+
+            return Result<SubjectResponseDto>.Success(
+                new SubjectResponseDto
+                {
+                    Id = subject.Id,
+                    Name = subject.Name,
+                    Description = subject.Description,
+                    Credits = subject.Credits,
+                    TeacherId = subject.TeacherId,
+                    TeacherName = (await _context.Teachers.FindAsync(subject.TeacherId))?.Name ?? "Desconocido"
+                },
+                "Materia creada exitosamente.",
+                201
+            );
         }
-
-        if (updateSubjectDto.Description is not null)
+        catch (Exception ex)
         {
-            subject.Description = updateSubjectDto.Description;
+            return Result<SubjectResponseDto>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
         }
-
-        if (updateSubjectDto.TeacherId != 0)
-        {
-            subject.TeacherId = updateSubjectDto.TeacherId;
-        }
-
-        subject.UpdatedAt = DateTime.UtcNow;
-        await _context.SaveChangesAsync();
-
-        return new SubjectResponseDto
-        {
-            Id = subject.Id,
-            Name = subject.Name,
-            Description = subject.Description,
-            Credits = subject.Credits,
-            TeacherId = subject.TeacherId,
-            TeacherName = (await _context.Teachers.FindAsync(subject.TeacherId))?.Name ?? "Desconocido"
-        };
     }
 
-    // Soft Delete
-    public async Task<bool> SoftDeleteAsync(int id)
+    public async Task<Result<SubjectResponseDto>> UpdateAsync(int id, UpdateSubjectDto updateSubjectDto)
     {
-        var subject = await _context.Subjects
-        .FirstOrDefaultAsync(subject => subject.Id == id);
+        try
+        {
+            var subject = await _context.Subjects
+                .FirstOrDefaultAsync(s => s.Id == id && s.DeletedAt == null);
 
-        if (subject == null) return false;
+            if (subject == null)
+            {
+                return Result<SubjectResponseDto>.Failure(
+                    "Materia no encontrada.",
+                    404
+                );
+            }
 
-        subject.DeletedAt = DateTime.UtcNow;
-        subject.UpdatedAt = DateTime.UtcNow;
-        await _context.SaveChangesAsync();
+            if (updateSubjectDto.Name is not null)
+            {
+                subject.Name = updateSubjectDto.Name;
+            }
 
-        return true;
+            if (updateSubjectDto.Description is not null)
+            {
+                subject.Description = updateSubjectDto.Description;
+            }
+
+            if (updateSubjectDto.TeacherId != 0)
+            {
+                subject.TeacherId = updateSubjectDto.TeacherId;
+            }
+
+            subject.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return Result<SubjectResponseDto>.Success(
+                new SubjectResponseDto
+                {
+                    Id = subject.Id,
+                    Name = subject.Name,
+                    Description = subject.Description,
+                    Credits = subject.Credits,
+                    TeacherId = subject.TeacherId,
+                    TeacherName = (await _context.Teachers.FindAsync(subject.TeacherId))?.Name ?? "Desconocido"
+                },
+                "Materia actualizada exitosamente.",
+                200
+            );
+        }
+        catch (Exception ex)
+        {
+            return Result<SubjectResponseDto>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
     }
+
+    public async Task<Result<object>> SoftDeleteAsync(int id)
+    {
+        try
+        {
+            var subject = await _context.Subjects
+                .FirstOrDefaultAsync(s => s.Id == id && s.DeletedAt == null);
+
+            if (subject == null)
+            {
+                return Result<object>.Failure(
+                    "Materia no encontrada.",
+                    404
+                );
+            }
+
+            subject.DeletedAt = DateTime.UtcNow;
+            subject.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return Result<object>.Success(
+                new { },
+                "Materia eliminada exitosamente.",
+                200
+            );
+        }
+        catch (Exception ex)
+        {
+            return Result<object>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
+    }
+}
+
+public interface ISubjectService
+{
+    Task<Result<List<SubjectResponseDto>>> GetAllAsync();
+    Task<Result<SubjectResponseDto>> GetByIdAsync(int id);
+    Task<Result<List<SubjectResponseDto>>> GetByTeacherIdAsync(int teacherId);
+    Task<Result<SubjectResponseDto>> CreateAsync(CreateSubjectDto dto);
+    Task<Result<SubjectResponseDto>> UpdateAsync(int id, UpdateSubjectDto updateSubjectDto);
+    Task<Result<object>> SoftDeleteAsync(int id);
 }
