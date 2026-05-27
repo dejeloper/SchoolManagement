@@ -1,12 +1,10 @@
 <div class="min-h-screen bg-stone-100 dark:bg-neutral-900 flex flex-col items-center transition-colors duration-300">
 
-  <!-- Header -->
   <header class="flex items-center gap-3 pt-10">
     <span class="text-amber-500 text-xl">◆</span>
     <span class="text-xl font-semibold tracking-widest text-stone-800 dark:text-stone-200">SisTeAca</span>
   </header>
 
-  <!-- STEP 1: Selección de rol -->
   @if (!selectedRole()) {
   <main class="flex flex-col items-center flex-1 w-full max-w-2xl px-8 pt-16 pb-8">
 
@@ -21,7 +19,6 @@
 
     <div class="grid grid-cols-2 gap-6 w-full">
 
-      <!-- Card Estudiante -->
       <button (click)="selectRole('student')"
         class="group bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-8 text-left flex flex-col gap-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-amber-300 dark:hover:border-amber-700 cursor-pointer">
         <div class="w-14 h-14 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-2xl">
@@ -37,7 +34,6 @@
           class="self-end text-stone-300 dark:text-neutral-600 text-lg transition-all duration-200 group-hover:text-amber-500 group-hover:translate-x-1">→</span>
       </button>
 
-      <!-- Card Profesor -->
       <button (click)="selectRole('teacher')"
         class="group bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-8 text-left flex flex-col gap-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-sky-300 dark:hover:border-sky-700 cursor-pointer">
         <div class="w-14 h-14 rounded-xl bg-sky-50 dark:bg-sky-900/20 flex items-center justify-center text-2xl">
@@ -57,7 +53,6 @@
   </main>
   }
 
-  <!-- STEP 2: Formulario -->
   @if (selectedRole()) {
   <main class="flex flex-col items-center flex-1 w-full max-w-md px-6 pt-16 pb-8">
 
@@ -70,16 +65,9 @@
       class="w-full bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-10 shadow-sm">
 
       <div class="text-center mb-8">
-        <span class="inline-block text-xs font-medium tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 border"
-          [class.bg-amber-50]="selectedRole() === 'student'" [class.text-amber-600]="selectedRole() === 'student'"
-          [class.border-amber-200]="selectedRole() === 'student'"
-          [class.dark:bg-amber-900/20]="selectedRole() === 'student'"
-          [class.dark:text-amber-400]="selectedRole() === 'student'"
-          [class.dark:border-amber-800]="selectedRole() === 'student'" [class.bg-sky-50]="selectedRole() === 'teacher'"
-          [class.text-sky-600]="selectedRole() === 'teacher'" [class.border-sky-200]="selectedRole() === 'teacher'"
-          [class.dark:bg-sky-900/20]="selectedRole() === 'teacher'"
-          [class.dark:text-sky-400]="selectedRole() === 'teacher'"
-          [class.dark:border-sky-800]="selectedRole() === 'teacher'">
+        <span
+          class="inline-block text-xs font-medium tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 border"
+          [class]="badgeClass()">
           {{ selectedRole() === 'student' ? 'Estudiante' : 'Profesor' }}
         </span>
         <h1 class="text-3xl font-semibold text-stone-800 dark:text-stone-100 tracking-tight mb-2">

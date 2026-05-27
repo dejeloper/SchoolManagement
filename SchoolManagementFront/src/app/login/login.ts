@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth';
@@ -17,6 +17,17 @@ export class LoginComponent {
   password = signal('');
   loading = signal(false);
   error = signal('');
+
+  badgeClass = computed(() => {
+    const role = this.selectedRole();
+    if (role === 'student') {
+      return 'bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800';
+    }
+    if (role === 'teacher') {
+      return 'bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-900/20 dark:text-sky-400 dark:border-sky-800';
+    }
+    return '';
+  });
 
   constructor(private auth: AuthService, private router: Router) { }
 
