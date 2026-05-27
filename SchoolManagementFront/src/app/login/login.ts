@@ -40,7 +40,8 @@ export class LoginComponent {
     this.loading.set(true);
     this.error.set('');
 
-    this.auth.login(this.email().trim(), this.password().trim(), this.selectedRole()!).subscribe({
+    // Se omite la password por pruebas
+    this.auth.login(this.email().trim(), this.selectedRole()!).subscribe({
       next: (res: any) => {
         this.loading.set(false);
         if (res.success && res.value) {

@@ -1,0 +1,117 @@
+export interface ApiResult<T> {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  value: T | null;
+}
+
+export interface Student {
+  id: number;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
+export interface CreateStudentDto {
+  name: string;
+  email: string;
+}
+
+export interface UpdateStudentDto {
+  name: string;
+  email: string;
+}
+
+export interface Teacher {
+  id: number;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
+export interface CreateTeacherDto {
+  name: string;
+  email: string;
+}
+
+export interface UpdateTeacherDto {
+  name: string;
+  email: string;
+}
+
+export interface Subject {
+  id: number;
+  name: string;
+  code: string;
+  credits: number;
+  teacherId: number;
+  teacherName?: string;
+  createdAt: string;
+}
+
+export interface CreateSubjectDto {
+  name: string;
+  code: string;
+  credits: number;
+  teacherId: number;
+}
+
+export interface UpdateSubjectDto {
+  name: string;
+  code: string;
+  credits: number;
+  teacherId: number;
+}
+
+export interface Enrollment {
+  id: number;
+  studentId: number;
+  subjectId: number;
+  studentName: string;
+  subjectName: string;
+  teacherName: string;
+  credits: number;
+  createdAt: string;
+}
+
+export interface CreateEnrollmentDto {
+  studentId: number;
+  subjectId: number;
+}
+
+export interface EnrollmentDetail {
+  subjectName: string;
+  credits: number;
+  teacherName: string;
+}
+
+export interface StudentAcademicRecord {
+  studentId: number;
+  studentName: string;
+  enrollments: EnrollmentDetail[];
+  totalCredits: number;
+}
+
+export interface ClassmatesBySubject {
+  subjectName: string;
+  classmateNames: string[];
+}
+
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  value: {
+    id: number;
+    name: string;
+    email: string;
+    role: 'student' | 'teacher';
+  } | null;
+}
+
+export interface SessionUser {
+  id: number;
+  name: string;
+  email: string;
+  role: 'student' | 'teacher';
+}

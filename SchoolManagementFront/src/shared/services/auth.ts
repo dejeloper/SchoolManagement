@@ -1,39 +1,41 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface LoginResponse {
-  success: boolean;
-  message: string;
-  statusCode: number;
-  value: {
-    id: number;
-    name: string;
-    email: string;
-    role: 'student' | 'teacher';
-  } | null;
-}
+import { LoginResponse, SessionUser } from '../interfaces/models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api';
+  private readonly apiUrl = 'http://localhost:5000/api';
+
+  currentUser = signal<SessionUser | null>(this.getSession());
 
   constructor(private http: HttpClient) { }
 
-  login(email: string, password: string, role: 'student' | 'teacher'): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, { email, password, role });
+  login(email: string, role: 'student' | 'teacher'): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, { email, role });
   }
 
-  saveSession(user: LoginResponse['value'], role: 'student' | 'teacher'): void {
-    localStorage.setItem('user', JSON.stringify({ ...user, role }));
+  saveSession(user: NonNullable<LoginResponse['value']>, role: 'student' | 'teacher'): void {
+    const session: SessionUser = { ...user, role };
+    localStorage.setItem('session', JSON.stringify(session));
+    this.currentUser.set(session);
   }
 
-  getSession(): (LoginResponse['value'] & { role: string }) | null {
-    const raw = localStorage.getItem('user');
-    return raw ? JSON.parse(raw) : null;
+  getSession(): SessionUser | null {
+    try {
+      const raw = localStorage.getItem('session');
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
   }
 
   logout(): void {
-    localStorage.removeItem('user');
+    localStorage.removeItem('session');
+    this.currentUser.set(null);
+  }
+
+  isLoggedIn(): boolean {
+    return this.currentUser() !== null;
   }
 }
