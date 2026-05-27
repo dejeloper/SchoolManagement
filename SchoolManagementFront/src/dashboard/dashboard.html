@@ -1,0 +1,14 @@
+<div
+  style="min-height:100vh;background:#0d0f12;color:#e8e6e1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;gap:16px;">
+  <p style="color:#5a5852;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">Bienvenido</p>
+  <h1 style="font-family:'Playfair Display',serif;font-size:2rem;margin:0;color:#f0ede8;">{{ user?.name }}</h1>
+  <span
+    style="font-size:13px;padding:4px 14px;border-radius:100px;background:rgba(201,168,76,0.1);color:#c9a84c;border:1px solid rgba(201,168,76,0.2);">
+    {{ user?.role === 'student' ? 'Estudiante' : 'Profesor' }}
+  </span>
+  <button (click)="logout()"
+    style="margin-top:24px;background:none;border:1px solid #252830;color:#5a5852;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:14px;">
+    Cerrar sesión
+  </button>
+  <p style="color:#33312e;font-size:13px;margin-top:16px;">— Dashboard completo próximamente —</p>
+</div>
