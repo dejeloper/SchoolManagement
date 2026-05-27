@@ -12,23 +12,22 @@
 4. [Guía de Componentes](#guía-de-componentes)
 5. [Integración con API](#integración-con-api)
 6. [Rutas de la Aplicación](#rutas-de-la-aplicación)
-7. [Próximos Pasos](#próximos-pasos)
 
 ---
 
 ## Stack Tecnológico
 
-| Componente | Tecnología | Versión |
-|-----------|-----------|---------|
-| Framework | Angular | 17+ |
-| Lenguaje | TypeScript | 5+ |
-| Gestor de paquetes | npm | 10+ |
-| HTTP Client | HttpClientModule | Integrado |
-| Estilos | CSS / Bootstrap / Tailwind* | Por definir |
-| Gestor de estado | Services / RxJS* | Por definir |
-| Testing | Jasmine / Karma* | Por definir |
+| Componente         | Tecnología                   | Versión     |
+| ------------------ | ---------------------------- | ----------- |
+| Framework          | Angular                      | 17+         |
+| Lenguaje           | TypeScript                   | 5+          |
+| Gestor de paquetes | npm                          | 10+         |
+| HTTP Client        | HttpClientModule             | Integrado   |
+| Estilos            | CSS / Bootstrap / Tailwind\* | Por definir |
+| Gestor de estado   | Services / RxJS\*            | Por definir |
+| Testing            | Jasmine / Karma\*            | Por definir |
 
-*Por definir en la implementación
+\*Por definir en la implementación
 
 ---
 
@@ -90,12 +89,12 @@ En `src/environments/environment.ts`:
 ```typescript
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5206/api'
+  apiUrl: "http://localhost:5206/api",
 };
 
 export const environment = {
   production: true,
-  apiUrl: 'https://api.example.com/api'
+  apiUrl: "https://api.example.com/api",
 };
 ```
 
@@ -120,16 +119,20 @@ npm install axios
 ### Componentes Principales
 
 #### 1. **Navbar / Header**
+
 Barra de navegación con menú principal
+
 - Logo de la aplicación
 - Menú de secciones principales
 - Usuario autenticado (cuando se implemente auth)
 - Logout
 
 #### 2. **Sidebar (Opcional)**
+
 Menú lateral con opciones de navegación
 
 #### 3. **Página de Estudiantes** (`/students`)
+
 - Listar todos los estudiantes
 - Crear nuevo estudiante
 - Editar estudiante
@@ -137,18 +140,21 @@ Menú lateral con opciones de navegación
 - Ver registro académico
 
 #### 4. **Página de Profesores** (`/teachers`)
+
 - Listar todos los profesores
 - Crear nuevo profesor
 - Editar profesor
 - Eliminar profesor
 
 #### 5. **Página de Materias** (`/subjects`)
+
 - Listar todas las materias
 - Crear nueva materia
 - Editar materia
 - Eliminar materia
 
 #### 6. **Página de Inscripciones** (`/enrollments`)
+
 - Listar inscripciones
 - Crear inscripción (estudiante + materia)
 - Ver compañeros de clase
@@ -165,12 +171,12 @@ Crear un servicio base para consumir la API:
 
 ```typescript
 // src/app/services/api.service.ts
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "../../environments/environment";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ApiService {
   private apiUrl = environment.apiUrl;
@@ -199,18 +205,18 @@ export class ApiService {
 
 ```typescript
 // src/app/services/student.service.ts
-import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
-import { Student } from '../models/student.model';
+import { Injectable } from "@angular/core";
+import { ApiService } from "./api.service";
+import { Student } from "../models/student.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class StudentService {
   constructor(private apiService: ApiService) {}
 
   getAllStudents() {
-    return this.apiService.get<Student[]>('students');
+    return this.apiService.get<Student[]>("students");
   }
 
   getStudentById(id: number) {
@@ -218,7 +224,7 @@ export class StudentService {
   }
 
   createStudent(student: Student) {
-    return this.apiService.post<Student>('students', student);
+    return this.apiService.post<Student>("students", student);
   }
 
   updateStudent(id: number, student: Student) {
@@ -235,14 +241,14 @@ export class StudentService {
 
 ```typescript
 // src/app/pages/students/students.component.ts
-import { Component, OnInit } from '@angular/core';
-import { StudentService } from '../../services/student.service';
-import { Student } from '../../models/student.model';
+import { Component, OnInit } from "@angular/core";
+import { StudentService } from "../../services/student.service";
+import { Student } from "../../models/student.model";
 
 @Component({
-  selector: 'app-students',
-  templateUrl: './students.component.html',
-  styleUrls: ['./students.component.css']
+  selector: "app-students",
+  templateUrl: "./students.component.html",
+  styleUrls: ["./students.component.css"],
 })
 export class StudentsComponent implements OnInit {
   students: Student[] = [];
@@ -262,22 +268,22 @@ export class StudentsComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Error cargando estudiantes';
+        this.error = "Error cargando estudiantes";
         console.error(err);
         this.loading = false;
-      }
+      },
     });
   }
 
   deleteStudent(id: number): void {
-    if (confirm('¿Estás seguro?')) {
+    if (confirm("¿Estás seguro?")) {
       this.studentService.deleteStudent(id).subscribe({
         next: () => {
-          this.students = this.students.filter(s => s.id !== id);
+          this.students = this.students.filter((s) => s.id !== id);
         },
         error: (err) => {
           console.error(err);
-        }
+        },
       });
     }
   }
@@ -290,44 +296,47 @@ export class StudentsComponent implements OnInit {
 
 ```typescript
 // src/app/app.routes.ts
-import { Routes } from '@angular/router';
+import { Routes } from "@angular/router";
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { 
-    path: 'students', 
+  { path: "", component: HomeComponent },
+  {
+    path: "students",
     children: [
-      { path: '', component: StudentsListComponent },
-      { path: 'new', component: StudentFormComponent },
-      { path: ':id/edit', component: StudentFormComponent },
-      { path: ':id/academic-record', component: StudentAcademicRecordComponent }
-    ]
+      { path: "", component: StudentsListComponent },
+      { path: "new", component: StudentFormComponent },
+      { path: ":id/edit", component: StudentFormComponent },
+      {
+        path: ":id/academic-record",
+        component: StudentAcademicRecordComponent,
+      },
+    ],
   },
-  { 
-    path: 'teachers', 
+  {
+    path: "teachers",
     children: [
-      { path: '', component: TeachersListComponent },
-      { path: 'new', component: TeacherFormComponent },
-      { path: ':id/edit', component: TeacherFormComponent }
-    ]
+      { path: "", component: TeachersListComponent },
+      { path: "new", component: TeacherFormComponent },
+      { path: ":id/edit", component: TeacherFormComponent },
+    ],
   },
-  { 
-    path: 'subjects', 
+  {
+    path: "subjects",
     children: [
-      { path: '', component: SubjectsListComponent },
-      { path: 'new', component: SubjectFormComponent },
-      { path: ':id/edit', component: SubjectFormComponent }
-    ]
+      { path: "", component: SubjectsListComponent },
+      { path: "new", component: SubjectFormComponent },
+      { path: ":id/edit", component: SubjectFormComponent },
+    ],
   },
-  { 
-    path: 'enrollments', 
+  {
+    path: "enrollments",
     children: [
-      { path: '', component: EnrollmentsListComponent },
-      { path: 'new', component: EnrollmentFormComponent },
-      { path: ':id/classmates', component: ClassmatesComponent }
-    ]
+      { path: "", component: EnrollmentsListComponent },
+      { path: "new", component: EnrollmentFormComponent },
+      { path: ":id/classmates", component: ClassmatesComponent },
+    ],
   },
-  { path: '**', component: NotFoundComponent }
+  { path: "**", component: NotFoundComponent },
 ];
 ```
 
@@ -336,6 +345,7 @@ export const routes: Routes = [
 ## Estructura de Datos (Models)
 
 ### Student
+
 ```typescript
 export interface Student {
   id: number;
@@ -348,6 +358,7 @@ export interface Student {
 ```
 
 ### Teacher
+
 ```typescript
 export interface Teacher {
   id: number;
@@ -360,6 +371,7 @@ export interface Teacher {
 ```
 
 ### Subject
+
 ```typescript
 export interface Subject {
   id: number;
@@ -374,6 +386,7 @@ export interface Subject {
 ```
 
 ### Enrollment
+
 ```typescript
 export interface Enrollment {
   id: number;
@@ -386,23 +399,6 @@ export interface Enrollment {
   createdAt: Date;
 }
 ```
-
----
-
-## Próximos Pasos
-
-- [ ] Crear estructura de carpetas base
-- [ ] Configurar HttpClientModule
-- [ ] Implementar servicios para cada entidad
-- [ ] Crear componentes para listar datos
-- [ ] Crear formularios para CRUD
-- [ ] Implementar autenticación con JWT
-- [ ] Agregar validaciones en formularios
-- [ ] Implementar paginación en listados
-- [ ] Agregar notificaciones (toasts/snackbars)
-- [ ] Implementar tests unitarios
-- [ ] Mejorar UI con diseño responsivo
-- [ ] Desplegar en producción
 
 ---
 

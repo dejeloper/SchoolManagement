@@ -13,20 +13,19 @@
 5. [API Endpoints](#api-endpoints)
 6. [Validaciones de Negocio](#validaciones-de-negocio)
 7. [DTOs](#dtos)
-8. [Próximos Pasos](#próximos-pasos)
 
 ---
 
 ## Stack Tecnológico
 
-| Componente | Tecnología | Versión |
-|-----------|-----------|---------|
-| Framework | ASP.NET Core | 8.0 |
-| Lenguaje | C# | 12 |
-| ORM | Entity Framework Core | 8.0 |
-| Base de Datos | MySQL | 8.0+ |
-| Validación | DataAnnotations | Integrado |
-| Documentación API | Swagger/OpenAPI | Integrado |
+| Componente        | Tecnología            | Versión   |
+| ----------------- | --------------------- | --------- |
+| Framework         | ASP.NET Core          | 8.0       |
+| Lenguaje          | C#                    | 12        |
+| ORM               | Entity Framework Core | 8.0       |
+| Base de Datos     | MySQL                 | 8.0+      |
+| Validación        | DataAnnotations       | Integrado |
+| Documentación API | Swagger/OpenAPI       | Integrado |
 
 ---
 
@@ -62,6 +61,7 @@ En `appsettings.json`, actualiza la cadena de conexión:
 ```
 
 **Variables:**
+
 - `server` - Host de MySQL (localhost si está local)
 - `port` - Puerto MySQL (3306 por defecto)
 - `database` - Nombre de base de datos: `school_management`
@@ -76,6 +76,7 @@ mysql -u root -p < script.sql
 ```
 
 Esto crea:
+
 - Base de datos: `school_management`
 - Tablas: `students`, `teachers`, `subjects`, `enrollments`
 - Datos de ejemplo: 10 estudiantes, 5 docentes, 10 materias
@@ -101,6 +102,7 @@ Todas las respuestas API siguen el patrón `Result<T>`:
 ```
 
 **Campos:**
+
 - `success` - `true` si la operación fue exitosa, `false` en caso contrario
 - `message` - Descripción del resultado o error
 - `statusCode` - Código HTTP (200, 400, 404, 500, etc.)
@@ -128,11 +130,13 @@ Cada entidad tiene:
 **Implementación:**
 
 1. Todas las entidades tienen una columna `DeletedAt`:
+
    ```csharp
    public DateTime? DeletedAt { get; set; }
    ```
 
 2. El `DbContext` (AppDbContext) configura filtros globales:
+
    ```csharp
    modelBuilder.Entity<Student>().HasQueryFilter(s => s.DeletedAt == null);
    modelBuilder.Entity<Teacher>().HasQueryFilter(t => t.DeletedAt == null);
@@ -155,18 +159,19 @@ Cada entidad tiene:
 
 ### 📍 Inscripciones (Enrollments)
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `GET` | `/api/enrollments` | Listar todas las inscripciones |
-| `GET` | `/api/enrollments/{id}` | Obtener una inscripción por ID |
-| `GET` | `/api/enrollments/student/{studentId}` | Inscripciones de un estudiante |
-| `GET` | `/api/enrollments/subject/{subjectId}` | Estudiantes inscritos en una materia |
-| `GET` | `/api/enrollments/student/{studentId}/classmates` | Compañeros de clase (solo nombres) |
-| `GET` | `/api/enrollments/student/{studentId}/academic-record` | Registro académico consolidado |
-| `POST` | `/api/enrollments` | Crear una inscripción |
-| `DELETE` | `/api/enrollments/{id}` | Eliminar una inscripción (soft-delete) |
+| Método   | Endpoint                                               | Descripción                            |
+| -------- | ------------------------------------------------------ | -------------------------------------- |
+| `GET`    | `/api/enrollments`                                     | Listar todas las inscripciones         |
+| `GET`    | `/api/enrollments/{id}`                                | Obtener una inscripción por ID         |
+| `GET`    | `/api/enrollments/student/{studentId}`                 | Inscripciones de un estudiante         |
+| `GET`    | `/api/enrollments/subject/{subjectId}`                 | Estudiantes inscritos en una materia   |
+| `GET`    | `/api/enrollments/student/{studentId}/classmates`      | Compañeros de clase (solo nombres)     |
+| `GET`    | `/api/enrollments/student/{studentId}/academic-record` | Registro académico consolidado         |
+| `POST`   | `/api/enrollments`                                     | Crear una inscripción                  |
+| `DELETE` | `/api/enrollments/{id}`                                | Eliminar una inscripción (soft-delete) |
 
 **Ejemplo: Crear inscripción**
+
 ```json
 POST /api/enrollments
 {
@@ -176,6 +181,7 @@ POST /api/enrollments
 ```
 
 **Respuesta exitosa:**
+
 ```json
 {
   "success": true,
@@ -194,15 +200,16 @@ POST /api/enrollments
 
 ### 👨‍🎓 Estudiantes (Students)
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `GET` | `/api/students` | Listar todos los estudiantes |
-| `GET` | `/api/students/{id}` | Obtener un estudiante |
-| `POST` | `/api/students` | Crear un estudiante |
-| `PUT` | `/api/students/{id}` | Actualizar un estudiante |
+| Método   | Endpoint             | Descripción                          |
+| -------- | -------------------- | ------------------------------------ |
+| `GET`    | `/api/students`      | Listar todos los estudiantes         |
+| `GET`    | `/api/students/{id}` | Obtener un estudiante                |
+| `POST`   | `/api/students`      | Crear un estudiante                  |
+| `PUT`    | `/api/students/{id}` | Actualizar un estudiante             |
 | `DELETE` | `/api/students/{id}` | Eliminar un estudiante (soft-delete) |
 
 **Ejemplo: Crear estudiante**
+
 ```json
 POST /api/students
 {
@@ -215,15 +222,16 @@ POST /api/students
 
 ### 👨‍🏫 Profesores (Teachers)
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `GET` | `/api/teachers` | Listar todos los profesores |
-| `GET` | `/api/teachers/{id}` | Obtener un profesor |
-| `POST` | `/api/teachers` | Crear un profesor |
-| `PUT` | `/api/teachers/{id}` | Actualizar un profesor |
+| Método   | Endpoint             | Descripción                        |
+| -------- | -------------------- | ---------------------------------- |
+| `GET`    | `/api/teachers`      | Listar todos los profesores        |
+| `GET`    | `/api/teachers/{id}` | Obtener un profesor                |
+| `POST`   | `/api/teachers`      | Crear un profesor                  |
+| `PUT`    | `/api/teachers/{id}` | Actualizar un profesor             |
 | `DELETE` | `/api/teachers/{id}` | Eliminar un profesor (soft-delete) |
 
 **Ejemplo: Crear profesor**
+
 ```json
 POST /api/teachers
 {
@@ -236,15 +244,16 @@ POST /api/teachers
 
 ### 📚 Materias (Subjects)
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `GET` | `/api/subjects` | Listar todas las materias |
-| `GET` | `/api/subjects/{id}` | Obtener una materia |
-| `POST` | `/api/subjects` | Crear una materia |
-| `PUT` | `/api/subjects/{id}` | Actualizar una materia |
+| Método   | Endpoint             | Descripción                        |
+| -------- | -------------------- | ---------------------------------- |
+| `GET`    | `/api/subjects`      | Listar todas las materias          |
+| `GET`    | `/api/subjects/{id}` | Obtener una materia                |
+| `POST`   | `/api/subjects`      | Crear una materia                  |
+| `PUT`    | `/api/subjects/{id}` | Actualizar una materia             |
 | `DELETE` | `/api/subjects/{id}` | Eliminar una materia (soft-delete) |
 
 **Ejemplo: Crear materia**
+
 ```json
 POST /api/subjects
 {
@@ -259,8 +268,8 @@ POST /api/subjects
 
 ### 🔐 Autenticación (Auth)
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
+| Método | Endpoint          | Descripción               |
+| ------ | ----------------- | ------------------------- |
 | `POST` | `/api/auth/login` | Login simulado por correo |
 
 **Nota:** Actualmente es un simulacro para propósitos de prueba.
@@ -273,11 +282,13 @@ POST /api/subjects
 
 Un estudiante no puede inscribirse en más materias si la suma de créditos excedería 9.
 
-**Regla:** 
+**Regla:**
+
 - Cada materia tiene 3 créditos
 - Un estudiante puede inscribirse en máximo 3 materias (3 × 3 = 9 créditos)
 
 **Implementación:**
+
 ```csharp
 // En EnrollmentService.cs
 var totalCredits = student.Enrollments.Sum(e => e.Subject.Credits);
@@ -290,10 +301,12 @@ if (totalCredits + subject.Credits > 9)
 Un estudiante no puede tener más de una materia con el mismo profesor.
 
 **Regla:**
+
 - Si un estudiante ya está inscrito en una materia impartida por un profesor
 - No puede inscribirse en otra materia del mismo profesor
 
 **Implementación:**
+
 ```csharp
 var hasTeacherAlready = student.Enrollments
     .Any(e => e.Subject.TeacherId == subject.TeacherId);
@@ -308,6 +321,7 @@ if (hasTeacherAlready)
 Un estudiante no puede inscribirse dos veces en la misma materia.
 
 **Implementación:**
+
 ```csharp
 var alreadyEnrolled = student.Enrollments
     .Any(e => e.SubjectId == subjectId && e.DeletedAt == null);
@@ -324,6 +338,7 @@ if (alreadyEnrolled)
 Los DTOs (Data Transfer Objects) definen la estructura de datos que se envían y reciben en la API.
 
 ### CreateEnrollmentDto
+
 ```csharp
 public class CreateEnrollmentDto
 {
@@ -333,6 +348,7 @@ public class CreateEnrollmentDto
 ```
 
 ### EnrollmentResponseDto
+
 ```csharp
 public class EnrollmentResponseDto
 {
@@ -348,6 +364,7 @@ public class EnrollmentResponseDto
 ```
 
 ### StudentAcademicRecordDto
+
 Consolidado con todas las inscripciones del estudiante:
 
 ```csharp
@@ -368,6 +385,7 @@ public class EnrollmentDetail
 ```
 
 ### ClassmatesBySubjectDto
+
 Compañeros de clase agrupados por materia:
 
 ```csharp
@@ -377,17 +395,6 @@ public class ClassmatesBySubjectDto
     public List<string> ClassmateNames { get; set; }
 }
 ```
-
----
-
-## Próximos Pasos
-
-- [ ] Agregar **DataAnnotations** a DTOs para validación de entrada
-- [ ] Implementar **Tests Unitarios** para validaciones de negocio
-- [ ] Agregar **autorización** con tokens JWT
-- [ ] Documentar endpoints con **ejemplos detallados** en Swagger
-- [ ] Agregar **caché** en consultas frecuentes
-- [ ] Implementar **paginación** en listados largos
 
 ---
 
