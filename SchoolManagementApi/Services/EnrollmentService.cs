@@ -9,6 +9,7 @@ namespace SchoolManagementApi.Services;
 public class EnrollmentService(AppDbContext context) : IEnrollmentService
 {
     private readonly AppDbContext _context = context;
+    private const int MaxCreditsPerStudent = 9;
 
     public async Task<Result<List<EnrollmentResponseDto>>> GetAllAsync()
     {
@@ -155,10 +156,10 @@ public class EnrollmentService(AppDbContext context) : IEnrollmentService
     {
         try
         {
-            var studentExists = await _context.Students
-                .AnyAsync(s => s.Id == dto.StudentId);
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.Id == dto.StudentId);
 
-            if (!studentExists)
+            if (student == null)
             {
                 return Result<EnrollmentResponseDto>.Failure(
                     "El estudiante no existe.",
@@ -177,21 +178,23 @@ public class EnrollmentService(AppDbContext context) : IEnrollmentService
                 );
             }
 
-            var currentEnrollments = await _context.Enrollments
+            var totalCredits = await _context.Enrollments
                 .Where(e => e.StudentId == dto.StudentId)
-                .CountAsync();
+                .Join(_context.Subjects, e => e.SubjectId, s => s.Id, (e, s) => s.Credits)
+                .SumAsync(c => (int?)c) ?? 0;
 
-            if (currentEnrollments >= 3)
+            if (totalCredits + subject.Credits > MaxCreditsPerStudent)
             {
                 return Result<EnrollmentResponseDto>.Failure(
-                    "El estudiante ya tiene 3 materias inscritas (máximo permitido).",
+                    $"El estudiante excedería el máximo de {MaxCreditsPerStudent} créditos permitidos.",
                     400
                 );
             }
 
             var hasSameTeacher = await _context.Enrollments
                 .Where(e => e.StudentId == dto.StudentId)
-                .AnyAsync(e => e.Subject.TeacherId == subject.TeacherId);
+                .Join(_context.Subjects, e => e.SubjectId, s => s.Id, (e, s) => s.TeacherId)
+                .AnyAsync(teacherId => teacherId == subject.TeacherId);
 
             if (hasSameTeacher)
             {
@@ -201,16 +204,40 @@ public class EnrollmentService(AppDbContext context) : IEnrollmentService
                 );
             }
 
-            var enrollmentExists = await _context.Enrollments
+            var existingEnrollment = await _context.Enrollments
                 .IgnoreQueryFilters()
-                .AnyAsync(e => e.StudentId == dto.StudentId && e.SubjectId == dto.SubjectId);
+                .FirstOrDefaultAsync(e => e.StudentId == dto.StudentId && e.SubjectId == dto.SubjectId);
 
-            if (enrollmentExists)
+            if (existingEnrollment != null)
             {
-                return Result<EnrollmentResponseDto>.Failure(
-                    "El estudiante ya está inscrito en esta materia.",
-                    400
-                );
+                if (existingEnrollment.DeletedAt != null)
+                {
+                    existingEnrollment.DeletedAt = null;
+                    existingEnrollment.UpdatedAt = DateTime.UtcNow;
+                    _context.Enrollments.Update(existingEnrollment);
+                    await _context.SaveChangesAsync();
+
+                    return Result<EnrollmentResponseDto>.Success(
+                        new EnrollmentResponseDto
+                        {
+                            Id = existingEnrollment.Id,
+                            StudentId = existingEnrollment.StudentId,
+                            StudentName = student.Name + " " + student.Surname,
+                            SubjectId = existingEnrollment.SubjectId,
+                            SubjectName = subject.Name,
+                            CreatedAt = existingEnrollment.CreatedAt
+                        },
+                        "Inscripción restaurada exitosamente.",
+                        200
+                    );
+                }
+                else
+                {
+                    return Result<EnrollmentResponseDto>.Failure(
+                        "El estudiante ya está inscrito en esta materia.",
+                        400
+                    );
+                }
             }
 
             var enrollment = new Enrollment
@@ -224,14 +251,12 @@ public class EnrollmentService(AppDbContext context) : IEnrollmentService
             _context.Enrollments.Add(enrollment);
             await _context.SaveChangesAsync();
 
-            var student = await _context.Students.FindAsync(dto.StudentId);
-
             return Result<EnrollmentResponseDto>.Success(
                 new EnrollmentResponseDto
                 {
                     Id = enrollment.Id,
                     StudentId = enrollment.StudentId,
-                    StudentName = student!.Name + " " + student.Surname,
+                    StudentName = student.Name + " " + student.Surname,
                     SubjectId = enrollment.SubjectId,
                     SubjectName = subject.Name,
                     CreatedAt = enrollment.CreatedAt
