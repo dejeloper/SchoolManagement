@@ -4,11 +4,11 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
-    loadComponent: () => import('../login/login').then(m => m.LoginComponent),
+    loadComponent: () => import('./login/login').then(m => m.LoginComponent),
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('../dashboard/dashboard').then(m => m.Dashboard),
+    loadComponent: () => import('./dashboard/dashboard').then(m => m.Dashboard),
   },
   { path: '**', redirectTo: 'login' },
 ];

@@ -20,8 +20,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(email: string, role: 'student' | 'teacher'): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, { email, role });
+  login(email: string, password: string, role: 'student' | 'teacher'): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, { email, password, role });
   }
 
   saveSession(user: LoginResponse['value'], role: 'student' | 'teacher'): void {
