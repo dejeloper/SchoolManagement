@@ -3,7 +3,6 @@ using SchoolManagementApi.Data;
 using SchoolManagementApi.DTOs.Common;
 using SchoolManagementApi.DTOs.Enrollments;
 using SchoolManagementApi.Entities;
-using System.Linq;
 
 namespace SchoolManagementApi.Services;
 
@@ -209,36 +208,34 @@ public class EnrollmentService(AppDbContext context) : IEnrollmentService
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(e => e.StudentId == dto.StudentId && e.SubjectId == dto.SubjectId);
 
+            if (existingEnrollment?.DeletedAt != null)
+            {
+                existingEnrollment.DeletedAt = null;
+                existingEnrollment.UpdatedAt = DateTime.UtcNow;
+                _context.Enrollments.Update(existingEnrollment);
+                await _context.SaveChangesAsync();
+
+                return Result<EnrollmentResponseDto>.Success(
+                    new EnrollmentResponseDto
+                    {
+                        Id = existingEnrollment.Id,
+                        StudentId = existingEnrollment.StudentId,
+                        StudentName = student.Name + " " + student.Surname,
+                        SubjectId = existingEnrollment.SubjectId,
+                        SubjectName = subject.Name,
+                        CreatedAt = existingEnrollment.CreatedAt
+                    },
+                    "Inscripción restaurada exitosamente.",
+                    200
+                );
+            }
+
             if (existingEnrollment != null)
             {
-                if (existingEnrollment.DeletedAt != null)
-                {
-                    existingEnrollment.DeletedAt = null;
-                    existingEnrollment.UpdatedAt = DateTime.UtcNow;
-                    _context.Enrollments.Update(existingEnrollment);
-                    await _context.SaveChangesAsync();
-
-                    return Result<EnrollmentResponseDto>.Success(
-                        new EnrollmentResponseDto
-                        {
-                            Id = existingEnrollment.Id,
-                            StudentId = existingEnrollment.StudentId,
-                            StudentName = student.Name + " " + student.Surname,
-                            SubjectId = existingEnrollment.SubjectId,
-                            SubjectName = subject.Name,
-                            CreatedAt = existingEnrollment.CreatedAt
-                        },
-                        "Inscripción restaurada exitosamente.",
-                        200
-                    );
-                }
-                else
-                {
-                    return Result<EnrollmentResponseDto>.Failure(
-                        "El estudiante ya está inscrito en esta materia.",
-                        400
-                    );
-                }
+                return Result<EnrollmentResponseDto>.Failure(
+                    "El estudiante ya está inscrito en esta materia.",
+                    400
+                );
             }
 
             var enrollment = new Enrollment
@@ -350,7 +347,7 @@ public class EnrollmentService(AppDbContext context) : IEnrollmentService
             }
 
             var enrolledSubjects = await _context.Enrollments
-                .Where(e => e.StudentId == studentId && e.DeletedAt == null)
+                .Where(e => e.StudentId == studentId)
                 .Select(e => new EnrolledSubjectForRecordDto
                 {
                     SubjectId = e.Subject.Id,
