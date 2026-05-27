@@ -6,94 +6,76 @@ namespace SchoolManagementApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TeachersController : ControllerBase
+public class TeachersController(ITeacherService teacherService) : ControllerBase
 {
-    private readonly TeacherService _teacherService;
+    private readonly ITeacherService _teacherService = teacherService;
 
-    public TeachersController(TeacherService teacherService)
-    {
-        _teacherService = teacherService;
-    }
-
-    // GET: api/teachers
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var teachers = await _teacherService.GetAllAsync();
-        return Ok(teachers);
+        var result = await _teacherService.GetAllAsync();
+
+        if (result.Error)
+        {
+            return StatusCode(result.StatusCode, result);
+        }
+
+        return Ok(result);
     }
 
-    // GET: api/teachers/{id}
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var teacher = await _teacherService.GetByIdAsync(id);
+        var result = await _teacherService.GetByIdAsync(id);
 
-        if (teacher == null)
+        if (result.Error)
         {
-            return NotFound(new
-            {
-                message = "Profesor no encontrado."
-            });
+            return StatusCode(result.StatusCode, result);
         }
 
-        return Ok(teacher);
+        return Ok(result);
     }
 
-    // POST: api/teachers
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateTeacherDto dto)
     {
-        try
-        {
-            var teacher = await _teacherService.CreateAsync(dto);
+        var result = await _teacherService.CreateAsync(dto);
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = teacher.Id },
-                teacher
-            );
-        }
-        catch (Exception ex)
+        if (result.Error)
         {
-            return BadRequest(new
-            {
-                message = ex.Message
-            });
+            return StatusCode(result.StatusCode, result);
         }
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = result.Value!.Id },
+            result
+        );
     }
 
-    // PUT: api/teachers/{id}
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateTeacherDto dto)
     {
-        var teacher = await _teacherService.UpdateAsync(id, dto);
+        var result = await _teacherService.UpdateAsync(id, dto);
 
-        if (teacher == null)
+        if (result.Error)
         {
-            return NotFound(new
-            {
-                message = "Profesor no encontrado."
-            });
+            return StatusCode(result.StatusCode, result);
         }
 
-        return Ok(teacher);
+        return Ok(result);
     }
 
-    // DELETE: api/teachers/{id}
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var success = await _teacherService.SoftDeleteAsync(id);
+        var result = await _teacherService.SoftDeleteAsync(id);
 
-        if (!success)
+        if (result.Error)
         {
-            return NotFound(new
-            {
-                message = "Profesor no encontrado."
-            });
+            return StatusCode(result.StatusCode, result);
         }
 
-        return NoContent();
+        return Ok(result);
     }
 }
