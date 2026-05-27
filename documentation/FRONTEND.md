@@ -1,6 +1,6 @@
 # 🎨 Documentación del Frontend
 
-**Frontend de Interrapidisimo** - Interfaz de usuario con **Angular** para gestión académica
+**Frontend de SisTeAca** - Interfaz de usuario con **Angular** para gestión académica
 
 ---
 

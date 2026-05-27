@@ -1,6 +1,6 @@
 # 🔧 Documentación del Backend
 
-**Backend de Interrapidisimo** - API REST para gestión académica con **ASP.NET Core 8** y **Entity Framework Core**
+**Backend de SisTeAca** - API REST para gestión académica con **ASP.NET Core 8** y **Entity Framework Core**
 
 ---
 
