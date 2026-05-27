@@ -1,128 +1,267 @@
 using Microsoft.EntityFrameworkCore;
 using SchoolManagementApi.Data;
+using SchoolManagementApi.DTOs.Common;
 using SchoolManagementApi.DTOs.Students;
 using SchoolManagementApi.Entities;
 
 namespace SchoolManagementApi.Services;
 
-public class StudentService
+public class StudentService(AppDbContext context) : IStudentService
 {
-    private readonly AppDbContext _context;
-
-    public StudentService(AppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly AppDbContext _context = context;
 
     // Get All
-    public async Task<List<StudentResponseDto>> GetAllAsync()
+    public async Task<Result<List<StudentResponseDto>>> GetAllAsync()
     {
-        return await _context.Students
-            .Select(student => new StudentResponseDto
-            {
-                Id = student.Id,
-                Name = student.Name,
-                Surname = student.Surname,
-                Email = student.Email
-            })
-            .ToListAsync();
+        try
+        {
+            var students = await _context.Students
+                .Select(student => new StudentResponseDto
+                {
+                    Id = student.Id,
+                    Name = student.Name,
+                    Surname = student.Surname,
+                    Email = student.Email
+                })
+                .ToListAsync();
+
+            return Result<List<StudentResponseDto>>.Success(
+                students,
+                students.Count == 0
+                    ? "Estudiante no encontrado."
+                    : "Estudiantes obtenidos exitosamente.",
+                200
+            );
+        }
+        catch (Exception ex)
+        {
+            return Result<List<StudentResponseDto>>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
     }
 
     // Get By Id
-    public async Task<StudentResponseDto?> GetByIdAsync(int id)
+    public async Task<Result<StudentResponseDto>> GetByIdAsync(int id)
     {
-        return await _context.Students
-            .Where(student => student.Id == id)
-            .Select(student => new StudentResponseDto
+        try
+        {
+            var student = await _context.Students
+                .Where(s => s.Id == id && s.DeletedAt == null)
+                .Select(s => new StudentResponseDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Surname = s.Surname,
+                    Email = s.Email
+                })
+                .FirstOrDefaultAsync();
+
+            if (student == null)
             {
-                Id = student.Id,
-                Name = student.Name,
-                Surname = student.Surname,
-                Email = student.Email
-            })
-            .FirstOrDefaultAsync();
+                return Result<StudentResponseDto>.Failure(
+                    "Estudiante no encontrado.",
+                    404
+                );
+            }
+
+            return Result<StudentResponseDto>.Success(
+                student,
+                "Estudiante obtenido exitosamente.",
+                200
+            );
+        }
+        catch (Exception ex)
+        {
+            return Result<StudentResponseDto>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
     }
 
-    // Create 
-    public async Task<StudentResponseDto> CreateAsync(CreateStudentDto createStudentDto)
+    // Get By Email
+    public async Task<Result<StudentResponseDto>> GetByEmailAsync(string email)
     {
-        var emailExists = await _context.Students
-            .IgnoreQueryFilters() // -> Ignorar el filtro global de eliminación suave
-            .AnyAsync(student => student.Email == createStudentDto.Email);
-
-        if (emailExists)
+        try
         {
-            throw new Exception("El correo ya existe.");
+            var student = await _context.Students
+                .Where(s => s.Email == email && s.DeletedAt == null)
+                .Select(s => new StudentResponseDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Surname = s.Surname,
+                    Email = s.Email
+                })
+                .FirstOrDefaultAsync();
+
+            if (student == null)
+            {
+                return Result<StudentResponseDto>.Failure(
+                    "Estudiante no encontrado.",
+                    404
+                );
+            }
+
+            return Result<StudentResponseDto>.Success(
+                student,
+                "Estudiante obtenido exitosamente.",
+                200
+            );
         }
-
-        var student = new Student
+        catch (Exception ex)
         {
-            Name = createStudentDto.Name,
-            Surname = createStudentDto.Surname,
-            Email = createStudentDto.Email,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+            return Result<StudentResponseDto>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
+    }
 
-        _context.Students.Add(student);
-
-        await _context.SaveChangesAsync();
-
-        return new StudentResponseDto
+    // Create
+    public async Task<Result<StudentResponseDto>> CreateAsync(CreateStudentDto createStudentDto)
+    {
+        try
         {
-            Id = student.Id,
-            Name = student.Name,
-            Surname = student.Surname,
-            Email = student.Email
-        };
+            var emailExists = await _context.Students
+                .IgnoreQueryFilters()
+                .AnyAsync(s => s.Email == createStudentDto.Email);
+
+            if (emailExists)
+            {
+                return Result<StudentResponseDto>.Failure(
+                    "El correo ya existe.",
+                    400
+                );
+            }
+
+            var student = new Student
+            {
+                Name = createStudentDto.Name,
+                Surname = createStudentDto.Surname,
+                Email = createStudentDto.Email,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _context.Students.Add(student);
+            await _context.SaveChangesAsync();
+
+            return Result<StudentResponseDto>.Success(
+                new StudentResponseDto
+                {
+                    Id = student.Id,
+                    Name = student.Name,
+                    Surname = student.Surname,
+                    Email = student.Email
+                },
+                "Estudiante creado exitosamente.",
+                201
+            );
+        }
+        catch (Exception ex)
+        {
+            return Result<StudentResponseDto>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
     }
 
     // Update
-    public async Task<StudentResponseDto?> UpdateAsync(int id, UpdateStudentDto updateStudentDto)
+    public async Task<Result<StudentResponseDto>> UpdateAsync(int id, UpdateStudentDto updateStudentDto)
     {
-        var student = await _context.Students
-            .FirstOrDefaultAsync(student => student.Id == id);
-
-        if (student == null)             return null; 
-
-        if (updateStudentDto.Name is not null)
+        try
         {
-            student.Name = updateStudentDto.Name;
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.Id == id && s.DeletedAt == null);
+
+            if (student == null)
+            {
+                return Result<StudentResponseDto>.Failure(
+                    "Estudiante no encontrado.",
+                    404
+                );
+            }
+
+            if (updateStudentDto.Name is not null)
+            {
+                student.Name = updateStudentDto.Name;
+            }
+
+            if (updateStudentDto.Surname is not null)
+            {
+                student.Surname = updateStudentDto.Surname;
+            }
+
+            student.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return Result<StudentResponseDto>.Success(
+                new StudentResponseDto
+                {
+                    Id = student.Id,
+                    Name = student.Name,
+                    Surname = student.Surname,
+                    Email = student.Email
+                },
+                "Estudiante actualizado exitosamente.",
+                200
+            );
         }
-
-        if (updateStudentDto.Surname is not null)
+        catch (Exception ex)
         {
-            student.Surname = updateStudentDto.Surname;
+            return Result<StudentResponseDto>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
         }
-        student.UpdatedAt = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
-
-        return new StudentResponseDto
-        {
-            Id = student.Id,
-            Name = student.Name,
-            Surname = student.Surname,
-            Email = student.Email
-        };
     }
 
     // Soft Delete
-    public async Task<bool> SoftDeleteAsync(int id)
+    public async Task<Result<object>> SoftDeleteAsync(int id)
     {
-        var student = await _context.Students
-            .FirstOrDefaultAsync(student => student.Id == id);
-
-        if (student == null)
+        try
         {
-            return false;
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.Id == id && s.DeletedAt == null);
+
+            if (student == null)
+            {
+                return Result<object>.Failure(
+                    "Estudiante no encontrado.",
+                    404
+                );
+            }
+
+            student.DeletedAt = DateTime.UtcNow;
+            student.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return Result<object>.Success(
+                new { },
+                "Estudiante eliminado exitosamente.",
+                200
+            );
         }
-
-        student.DeletedAt = DateTime.UtcNow;
-        student.UpdatedAt = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
-
-        return true;
+        catch (Exception ex)
+        {
+            return Result<object>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
     }
+}
+
+public interface IStudentService
+{
+    Task<Result<List<StudentResponseDto>>> GetAllAsync();
+    Task<Result<StudentResponseDto>> GetByIdAsync(int id);
+    Task<Result<StudentResponseDto>> GetByEmailAsync(string email);
+    Task<Result<StudentResponseDto>> CreateAsync(CreateStudentDto createStudentDto);
+    Task<Result<StudentResponseDto>> UpdateAsync(int id, UpdateStudentDto updateStudentDto);
+    Task<Result<object>> SoftDeleteAsync(int id);
 }

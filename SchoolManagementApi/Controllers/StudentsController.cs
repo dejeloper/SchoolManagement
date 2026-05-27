@@ -6,94 +6,81 @@ namespace SchoolManagementApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class StudentsController : ControllerBase
+public class StudentsController(IStudentService studentService) : ControllerBase
 {
-    private readonly StudentService _studentService;
+    private readonly IStudentService _studentService = studentService;
 
-    public StudentsController(StudentService studentService)
-    {
-        _studentService = studentService;
-    }
-
-    // GET: api/students
+    // GET: api/students 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var students = await _studentService.GetAllAsync();
-        return Ok(students);
+        var result = await _studentService.GetAllAsync();
+
+        if (result.Error)
+        {
+            return StatusCode(result.StatusCode, result);
+        }
+
+        return Ok(result);
     }
 
     // GET: api/students/{id}
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var student = await _studentService.GetByIdAsync(id);
+        var result = await _studentService.GetByIdAsync(id);
 
-        if (student == null)
+        if (result.Error)
         {
-            return NotFound(new
-            {
-                message = "Estudiante no encontrado."
-            });
+            return StatusCode(result.StatusCode, result);
         }
 
-        return Ok(student);
+        return Ok(result);
     }
 
     // POST: api/students
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateStudentDto createStudentDto)
     {
-        try
-        {
-            var student = await _studentService.CreateAsync(createStudentDto);
+        var result = await _studentService.CreateAsync(createStudentDto);
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = student.Id },
-                student
-            );
-        }
-        catch (Exception ex)
+        if (result.Error)
         {
-            return BadRequest(new
-            {
-                message = ex.Message
-            });
+            return StatusCode(result.StatusCode, result);
         }
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = result.Value!.Id },
+            result
+        );
     }
 
     // PUT: api/students/{id}
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateStudentDto updateStudentDto)
     {
-        var student = await _studentService.UpdateAsync(id, updateStudentDto);
+        var result = await _studentService.UpdateAsync(id, updateStudentDto);
 
-        if (student == null)
+        if (result.Error)
         {
-            return NotFound(new
-            {
-                message = "Estudiante no encontrado."
-            });
+            return StatusCode(result.StatusCode, result);
         }
 
-        return Ok(student);
+        return Ok(result);
     }
 
     // DELETE: api/students/{id}
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var deleted = await _studentService.SoftDeleteAsync(id);
+        var result = await _studentService.SoftDeleteAsync(id);
 
-        if (!deleted)
+        if (result.Error)
         {
-            return NotFound(new
-            {
-                message = "Estudiante no encontrado."
-            });
+            return StatusCode(result.StatusCode, result);
         }
 
-        return NoContent();
+        return Ok(result);
     }
 }
