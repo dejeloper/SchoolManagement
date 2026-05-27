@@ -3,6 +3,7 @@ using SchoolManagementApi.Data;
 using SchoolManagementApi.DTOs.Common;
 using SchoolManagementApi.DTOs.Enrollments;
 using SchoolManagementApi.Entities;
+using System.Linq;
 
 namespace SchoolManagementApi.Services;
 
@@ -333,6 +334,58 @@ public class EnrollmentService(AppDbContext context) : IEnrollmentService
         }
     }
 
+    public async Task<Result<StudentAcademicRecordDto>> GetStudentAcademicRecordAsync(int studentId)
+    {
+        try
+        {
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.Id == studentId);
+
+            if (student == null)
+            {
+                return Result<StudentAcademicRecordDto>.Failure(
+                    "El estudiante no existe.",
+                    404
+                );
+            }
+
+            var enrolledSubjects = await _context.Enrollments
+                .Where(e => e.StudentId == studentId && e.DeletedAt == null)
+                .Select(e => new EnrolledSubjectForRecordDto
+                {
+                    SubjectId = e.Subject.Id,
+                    SubjectName = e.Subject.Name,
+                    TeacherName = e.Subject.Teacher.Name + " " + e.Subject.Teacher.Surname,
+                    Credits = e.Subject.Credits
+                })
+                .OrderBy(s => s.SubjectName)
+                .ToListAsync();
+
+            var totalCredits = enrolledSubjects.Sum(s => s.Credits);
+
+            var record = new StudentAcademicRecordDto
+            {
+                StudentId = student.Id,
+                StudentName = student.Name + " " + student.Surname,
+                Subjects = enrolledSubjects,
+                TotalCredits = totalCredits
+            };
+
+            return Result<StudentAcademicRecordDto>.Success(
+                record,
+                "Registro académico obtenido exitosamente.",
+                200
+            );
+        }
+        catch (Exception ex)
+        {
+            return Result<StudentAcademicRecordDto>.Failure(
+                $"Error en Base de Datos: {ex.Message}",
+                500
+            );
+        }
+    }
+
     public async Task<Result<object>> SoftDeleteAsync(int id)
     {
         try
@@ -376,5 +429,6 @@ public interface IEnrollmentService
     Task<Result<List<EnrollmentResponseDto>>> GetBySubjectIdAsync(int subjectId);
     Task<Result<EnrollmentResponseDto>> CreateAsync(CreateEnrollmentDto dto);
     Task<Result<List<ClassmatesBySubjectDto>>> GetClassmatesAsync(int studentId);
+    Task<Result<StudentAcademicRecordDto>> GetStudentAcademicRecordAsync(int studentId);
     Task<Result<object>> SoftDeleteAsync(int id);
 }

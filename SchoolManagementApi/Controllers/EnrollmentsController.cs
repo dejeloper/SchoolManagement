@@ -62,6 +62,19 @@ public class EnrollmentsController(IEnrollmentService enrollmentService) : Contr
         return Ok(result);
     }
 
+    [HttpGet("student/{studentId:int}/academic-record")]
+    public async Task<IActionResult> GetStudentAcademicRecord(int studentId)
+    {
+        var result = await _enrollmentService.GetStudentAcademicRecordAsync(studentId);
+
+        if (result.Error)
+        {
+            return StatusCode(result.StatusCode, result);
+        }
+
+        return Ok(result);
+    }
+
     [HttpGet("subject/{subjectId:int}")]
     public async Task<IActionResult> GetBySubjectId(int subjectId)
     {
