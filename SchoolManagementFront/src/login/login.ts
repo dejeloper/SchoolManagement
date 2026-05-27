@@ -14,6 +14,7 @@ type Role = 'student' | 'teacher';
 export class LoginComponent {
   selectedRole = signal<Role | null>(null);
   email = signal('');
+  password = signal('');
   loading = signal(false);
   error = signal('');
 
@@ -22,22 +23,24 @@ export class LoginComponent {
   selectRole(role: Role): void {
     this.selectedRole.set(role);
     this.email.set('');
+    this.password.set('');
     this.error.set('');
   }
 
   back(): void {
     this.selectedRole.set(null);
     this.email.set('');
+    this.password.set('');
     this.error.set('');
   }
 
   submit(): void {
-    if (!this.email().trim() || !this.selectedRole()) return;
+    if (!this.email().trim() || !this.password().trim() || !this.selectedRole()) return;
 
     this.loading.set(true);
     this.error.set('');
 
-    this.auth.login(this.email().trim(), this.selectedRole()!).subscribe({
+    this.auth.login(this.email().trim(), this.password().trim(), this.selectedRole()!).subscribe({
       next: (res: any) => {
         this.loading.set(false);
         if (res.success && res.value) {

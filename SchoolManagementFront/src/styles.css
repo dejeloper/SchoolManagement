@@ -4,17 +4,15 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom properties for colors */
 :root {
-  --color-primary: #D4A017; /* Warm Amber */
-  --color-secondary: #5DADE2; /* Soft Blue */
-  --color-dark: #2D2D2D; /* Nearly black */
-  --color-muted: #555555; /* Medium gray */
-  --color-light: #777777; /* Light gray */
+  --color-primary: #D4A017;
+  --color-secondary: #5DADE2;
+  --color-dark: #2D2D2D;
+  --color-muted: #555555;
+  --color-light: #777777;
 }
 
-/* Backgrounds */
-.login-bg {
-  background-color: #F8F6F0; /* Very light warm gray */
+.bg {
+  background-color: #F8F6F0;
   min-height: 100vh;
 }

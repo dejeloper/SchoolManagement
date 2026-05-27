@@ -1,100 +1,130 @@
-<div class="min-h-screen login-bg font-sans flex flex-col items-center">
-  <header class="relative z-10 flex items-center gap-4 pt-12">
-    <span class="text-primary text-2xl">◆</span>
-    <span class="text-logo text-xl">SisTeAca</span>
+<div class="min-h-screen bg-stone-100 dark:bg-neutral-900 flex flex-col items-center transition-colors duration-300">
+
+  <!-- Header -->
+  <header class="flex items-center gap-3 pt-10">
+    <span class="text-amber-500 text-xl">◆</span>
+    <span class="text-xl font-semibold tracking-widest text-stone-800 dark:text-stone-200">SisTeAca</span>
   </header>
 
+  <!-- STEP 1: Selección de rol -->
   @if (!selectedRole()) {
-  <main class="relative z-10 flex flex-col items-center flex-1 w-full max-w-105 px-6 pt-16">
+  <main class="flex flex-col items-center flex-1 w-full max-w-2xl px-8 pt-16 pb-8">
 
-    <div class="text-center mb-10">
-      <h1 class="text-title-main mb-5">Bienvenido</h1>
-      <p class="text-subtitle">Selecciona tu perfil para continuar</p>
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-semibold text-stone-800 dark:text-stone-100 tracking-tight mb-4">
+        Bienvenido
+      </h1>
+      <p class="text-sm text-stone-400 dark:text-stone-500 tracking-widest font-light">
+        Selecciona tu perfil para continuar
+      </p>
     </div>
 
     <div class="grid grid-cols-2 gap-6 w-full">
 
+      <!-- Card Estudiante -->
       <button (click)="selectRole('student')"
-        class="group btn-outline flex flex-col items-start gap-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-
-        <div class="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary/10">
+        class="group bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-8 text-left flex flex-col gap-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-amber-300 dark:hover:border-amber-700 cursor-pointer">
+        <div class="w-14 h-14 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-2xl">
           🎓
         </div>
-
-        <div class="space-y-2">
-          <h2 class="text-title-section">Estudiante</h2>
-          <p class="text-body">Consulta tus materias y registro académico</p>
+        <div class="space-y-1.5">
+          <h2 class="text-lg font-semibold text-stone-800 dark:text-stone-100">Estudiante</h2>
+          <p class="text-sm text-stone-400 dark:text-stone-500 leading-relaxed">
+            Consulta tus materias, compañeros y registro académico
+          </p>
         </div>
-
         <span
-          class="self-end text-muted transition-all duration-200 group-hover:text-primary group-hover:translate-x-1">
-          →
-        </span>
+          class="self-end text-stone-300 dark:text-neutral-600 text-lg transition-all duration-200 group-hover:text-amber-500 group-hover:translate-x-1">→</span>
       </button>
 
+      <!-- Card Profesor -->
       <button (click)="selectRole('teacher')"
-        class="group btn-outline flex flex-col items-start gap-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-
-        <div class="w-16 h-16 rounded-2xl flex items-center justify-center bg-secondary/10">
+        class="group bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-8 text-left flex flex-col gap-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-sky-300 dark:hover:border-sky-700 cursor-pointer">
+        <div class="w-14 h-14 rounded-xl bg-sky-50 dark:bg-sky-900/20 flex items-center justify-center text-2xl">
           📊
         </div>
-
-        <div class="space-y-2">
-          <h2 class="text-title-section">Profesor</h2>
-          <p class="text-body">Gestiona tus materias y estudiantes</p>
+        <div class="space-y-1.5">
+          <h2 class="text-lg font-semibold text-stone-800 dark:text-stone-100">Profesor</h2>
+          <p class="text-sm text-stone-400 dark:text-stone-500 leading-relaxed">
+            Gestiona tus materias, estudiantes inscritos y clases
+          </p>
         </div>
-
         <span
-          class="self-end text-muted transition-all duration-200 group-hover:text-secondary group-hover:translate-x-1">
-          →
-        </span>
+          class="self-end text-stone-300 dark:text-neutral-600 text-lg transition-all duration-200 group-hover:text-sky-500 group-hover:translate-x-1">→</span>
       </button>
 
     </div>
   </main>
   }
 
+  <!-- STEP 2: Formulario -->
   @if (selectedRole()) {
-  <main class="relative z-10 flex flex-col items-center flex-1 w-full max-w-[320px] px-6 pt-16">
+  <main class="flex flex-col items-center flex-1 w-full max-w-md px-6 pt-16 pb-8">
 
-    <button (click)="back()" class="self-start mb-6 text-muted hover:text-dark transition-colors duration-200">
+    <button (click)="back()"
+      class="self-start mb-8 text-sm text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors duration-200 bg-transparent border-none cursor-pointer">
       ← Volver
     </button>
 
-    <div class="w-full bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-md">
+    <div
+      class="w-full bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-10 shadow-sm">
 
-      <div class="text-center mb-6">
-        <span [class]="selectedRole() === 'student' ? 'badge-student' : 'badge-teacher'">
+      <div class="text-center mb-8">
+        <span class="inline-block text-xs font-medium tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 border"
+          [class.bg-amber-50]="selectedRole() === 'student'" [class.text-amber-600]="selectedRole() === 'student'"
+          [class.border-amber-200]="selectedRole() === 'student'"
+          [class.dark:bg-amber-900/20]="selectedRole() === 'student'"
+          [class.dark:text-amber-400]="selectedRole() === 'student'"
+          [class.dark:border-amber-800]="selectedRole() === 'student'" [class.bg-sky-50]="selectedRole() === 'teacher'"
+          [class.text-sky-600]="selectedRole() === 'teacher'" [class.border-sky-200]="selectedRole() === 'teacher'"
+          [class.dark:bg-sky-900/20]="selectedRole() === 'teacher'"
+          [class.dark:text-sky-400]="selectedRole() === 'teacher'"
+          [class.dark:border-sky-800]="selectedRole() === 'teacher'">
           {{ selectedRole() === 'student' ? 'Estudiante' : 'Profesor' }}
         </span>
-
-        <h1 class="text-title-main mb-4">Ingresa tu correo</h1>
-        <p class="text-subtitle">Usaremos tu correo para identificarte</p>
+        <h1 class="text-3xl font-semibold text-stone-800 dark:text-stone-100 tracking-tight mb-2">
+          Iniciar Sesión
+        </h1>
+        <p class="text-sm text-stone-400 dark:text-stone-500 font-light">
+          Ingresa tus credenciales para acceder
+        </p>
       </div>
 
-      <form class="flex flex-col gap-6" (ngSubmit)="submit()">
+      <form class="flex flex-col gap-5" (ngSubmit)="submit()">
 
         <div class="flex flex-col gap-2">
-          <label class="text-label">Correo electrónico</label>
-          <input type="email" class="input-field" placeholder="correo@ejemplo.com" [value]="email()"
-            (input)="email.set($any($event.target).value)" />
+          <label class="text-xs font-medium tracking-widest uppercase text-stone-400 dark:text-stone-500">
+            Correo electrónico
+          </label>
+          <input type="email" placeholder="correo@ejemplo.com" [value]="email()"
+            (input)="email.set($any($event.target).value)"
+            class="w-full bg-stone-50 dark:bg-neutral-900 border border-stone-200 dark:border-neutral-700 rounded-xl px-4 py-3 text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-300 dark:placeholder:text-neutral-600 outline-none transition-all duration-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 dark:focus:ring-amber-900/30" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="text-xs font-medium tracking-widest uppercase text-stone-400 dark:text-stone-500">
+            Contraseña
+          </label>
+          <input type="password" placeholder="··········" [value]="password()"
+            (input)="password.set($any($event.target).value)"
+            class="w-full bg-stone-50 dark:bg-neutral-900 border border-stone-200 dark:border-neutral-700 rounded-xl px-4 py-3 text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-300 dark:placeholder:text-neutral-600 outline-none transition-all duration-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 dark:focus:ring-amber-900/30" />
         </div>
 
         @if (error()) {
-        <div class="error-message">
+        <div
+          class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-500 dark:text-red-400 text-sm px-4 py-3 rounded-xl">
           {{ error() }}
         </div>
         }
 
-        <button type="submit" class="w-full py-3" [disabled]="loading() || !email().trim()"
-          [class.btn-primary]="selectedRole() === 'student'" [class.btn-secondary]="selectedRole() === 'teacher'">
-
+        <button type="submit" [disabled]="loading() || !email().trim() || !password().trim()"
+          class="w-full py-3.5 rounded-xl text-sm font-medium flex items-center justify-center transition-all duration-200 mt-1 border-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 hover:-translate-y-px text-white"
+          [class.bg-amber-500]="selectedRole() === 'student'" [class.bg-sky-500]="selectedRole() === 'teacher'">
           @if (!loading()) {
-          <span class="text-base font-medium">Entrar</span>
+          <span>Iniciar Sesión</span>
           } @else {
           <span class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
           }
-
         </button>
 
       </form>
@@ -102,7 +132,8 @@
   </main>
   }
 
-  <footer class="relative z-10 pt-6 text-[12px] text-muted tracking-wider">
+  <footer class="pb-8 text-xs text-stone-300 dark:text-neutral-600 tracking-widest">
     © 2026 SisTeAca · Sistema Académico
   </footer>
+
 </div>
