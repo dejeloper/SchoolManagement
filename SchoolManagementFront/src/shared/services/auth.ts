@@ -2,10 +2,11 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginResponse, SessionUser } from '../interfaces/models';
+import { API_BASE } from '../api-base';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:5000/api';
+  private readonly apiUrl = API_BASE;
 
   currentUser = signal<SessionUser | null>(this.getSession());
 
