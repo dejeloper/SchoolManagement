@@ -116,3 +116,22 @@ export interface SessionUser {
   email: string;
   role: 'student' | 'teacher' | 'admin' | 'auxiliar';
 }
+
+export interface User {
+  id: number;
+  usuario: string;
+  rol: string;
+  createdAt: string;
+}
+
+export interface CreateUserDto {
+  usuario: string;
+  rol: string;
+}
+
+export interface UpdateUserDto {
+  usuario?: string;
+  rol?: string;
+}
+
+
