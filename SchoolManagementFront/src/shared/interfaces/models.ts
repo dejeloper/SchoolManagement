@@ -26,18 +26,20 @@ export interface UpdateStudentDto {
 export interface Teacher {
   id: number;
   name: string;
+  surname: string;
   email: string;
   createdAt: string;
 }
 
 export interface CreateTeacherDto {
   name: string;
+  surname: string;
   email: string;
 }
 
 export interface UpdateTeacherDto {
-  name: string;
-  email: string;
+  name?: string;
+  surname?: string;
 }
 
 export interface Subject {

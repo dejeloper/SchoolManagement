@@ -1,13 +1,16 @@
-import { Routes } from '@angular/router';
-import { authRoutes } from './auth.routes';
-import { dashboardRoutes } from './dashboard.routes';
-import { studentsRoutes } from './students.routes';
-import { usersRoutes } from './users.routes';
+import {Routes} from '@angular/router';
+import {authRoutes} from './auth.routes';
+import {dashboardRoutes} from './dashboard.routes';
+import {studentsRoutes} from './students.routes';
+import {teachersRoutes} from './teachers.routes';
+import {subjectsRoutes} from './subjects.routes';
+import {usersRoutes} from './users.routes';
 
 export const routes: Routes = [
   ...authRoutes,
   ...dashboardRoutes,
   ...studentsRoutes,
+  ...teachersRoutes,
   ...usersRoutes,
-  { path: '**', redirectTo: 'login' },
+  {path: '**', redirectTo: 'login'},
 ];
