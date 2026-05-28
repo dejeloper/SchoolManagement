@@ -82,6 +82,48 @@ Ver documentación completa del frontend en → [`documentation/FRONTEND.md`](do
 
 ---
 
+## 📸 Capturas
+
+<div align="center">
+
+### 0. Inicio
+
+<img src="Imagenes/Inicio.avif" width="350" alt="Inicio">
+
+### 1. Admin / Auxiliar
+
+<img src="Imagenes/Login_admin.avif" width="350" alt="Login Admin">
+
+<img src="Imagenes/dashboard_admin.avif" width="350" alt="Admin Dashboard">
+
+<img src="Imagenes/CRUD_estudiantes_admin.avif" width="350" alt="CRUD Estudiantes"> <img src="Imagenes/CRUD_estudiantes_admin_nuevo.avif" width="350" alt="Nuevo Estudiante">
+
+<img src="Imagenes/CRUD_profesores_admin.avif" width="350" alt="CRUD Profesores"> <img src="Imagenes/CRUD_profesores_admin_nuevo.avif" width="350" alt="Nuevo Profesor">
+
+<img src="Imagenes/CRUD_materias_admin.avif" width="350" alt="CRUD Materias"> <img src="Imagenes/CRUD_materias_admin_nuevo.avif" width="350" alt="Nueva Materia">
+
+<img src="Imagenes/CRUD_inscripciones_admin.avif" width="350" alt="CRUD Inscripciones"> <img src="Imagenes/CRUD_inscripciones_admin_nuevo.avif" width="350" alt="Nueva Inscripción">
+
+<img src="Imagenes/CRUD_usuarios_admin.avif" width="350" alt="CRUD Usuarios"> <img src="Imagenes/CRUD_usuarios_admin_nuevo.avif" width="350" alt="Nuevo Usuario">
+
+### 2. Profesor
+
+<img src="Imagenes/Login_profesor.avif" width="350" alt="Login Profesor">
+
+<img src="Imagenes/dashboard_profesor.avif" width="350" alt="Dashboard Profesor">
+
+### 3. Estudiante
+
+<img src="Imagenes/Login_estudiante.avif" width="350" alt="Login Estudiante">
+
+<img src="Imagenes/dashboard_estudiante.avif" width="350" alt="Dashboard Estudiante">
+
+<img src="Imagenes/inscripción_estudiante.avif" width="350" alt="Inscripción Estudiante">
+
+</div>
+
+---
+
 ## 📚 Documentación
 
 - **[Backend](documentation/BACKEND.md)** - Arquitectura, endpoints, DTOs, validaciones
