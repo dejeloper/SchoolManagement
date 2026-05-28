@@ -41,6 +41,22 @@ export class LoginComponent {
     this.selectedRole.set(role);
     this.email.set('');
     this.password.set('');
+
+    // Para la demo
+    if (role == "admin") {
+      this.email.set('admin');
+      this.password.set('demo1');
+    } else if (role == "auxiliar") {
+      this.email.set('auxiliar1');
+      this.password.set('demo1');
+    } else if (role == "student") {
+      this.email.set('jhonatan.guerrero@example.com');
+      this.password.set('demo1');
+    } else {
+      this.email.set('doc.laura.hernandez@example.com');
+      this.password.set('demo1');
+    }
+
     this.error.set('');
   }
 
