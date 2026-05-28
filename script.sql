@@ -105,3 +105,22 @@ INSERT INTO subjects (name, description, teacher_id) VALUES
 ('Arte', 'Curso de arte contemporáneo', 5),
 ('Música', 'Curso de música clásica', 5);
 
+-- Table: Users
+CREATE TABLE IF NOT EXISTS users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario VARCHAR(100) UNIQUE NOT NULL,
+    rol VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_usuario ON users(usuario);
+CREATE INDEX IF NOT EXISTS idx_users_rol ON users(rol);
+
+-- 3 Users
+INSERT INTO users (usuario, rol) VALUES
+('admin', 'admin'),
+('auxiliar1', 'auxiliar'),
+('auxiliar2', 'auxiliar');
+
