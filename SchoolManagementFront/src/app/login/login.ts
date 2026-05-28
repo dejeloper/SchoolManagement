@@ -1,7 +1,7 @@
-import { Component, computed, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../shared/services/auth';
+import {Component, computed, signal} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {Router} from '@angular/router';
+import {AuthService} from '../../shared/services/auth';
 
 type Role = 'student' | 'teacher';
 
@@ -55,7 +55,7 @@ export class LoginComponent {
     this.auth.login(this.email().trim(), this.selectedRole()!).subscribe({
       next: (res: any) => {
         this.loading.set(false);
-        if (res.success && res.value) {
+        if (res.isSuccess && res.value) {
           this.auth.saveSession(res.value, this.selectedRole()!);
           this.router.navigate(['/dashboard']);
         } else {

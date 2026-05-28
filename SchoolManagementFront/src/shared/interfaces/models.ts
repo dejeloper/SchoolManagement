@@ -1,5 +1,5 @@
 export interface ApiResult<T> {
-  success: boolean;
+  isSuccess: boolean;
   message: string;
   statusCode: number;
   value: T | null;
@@ -98,7 +98,7 @@ export interface ClassmatesBySubject {
 }
 
 export interface LoginResponse {
-  success: boolean;
+  isSuccess: boolean;
   message: string;
   statusCode: number;
   value: {
