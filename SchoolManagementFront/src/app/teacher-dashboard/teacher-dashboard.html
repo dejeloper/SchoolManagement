@@ -6,7 +6,8 @@
     </div>
     <div class="flex items-center gap-4">
       <span class="text-sm text-stone-500 dark:text-stone-400">{{ user()?.name }}</span>
-      <span class="text-xs font-medium tracking-widest uppercase px-3 py-1 rounded-full border bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-800">
+      <span
+        class="text-xs font-medium tracking-widest uppercase px-3 py-1 rounded-full border bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-800">
         Profesor
       </span>
       <button (click)="logout()"
@@ -16,91 +17,109 @@
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-8 py-12">
+  <main class="max-w-6xl mx-auto px-8 py-12">
     <h1 class="text-3xl font-semibold tracking-tight mb-2">Panel del Profesor</h1>
     <p class="text-sm text-stone-400 dark:text-stone-500 mb-8">Bienvenido, {{ user()?.name }}</p>
 
     @if (loading()) {
-      <div class="flex items-center justify-center py-20">
-        <span class="w-8 h-8 border-2 border-sky-400 border-t-transparent rounded-full animate-spin"></span>
-      </div>
+    <div class="flex items-center justify-center py-20">
+      <span class="w-8 h-8 border-2 border-sky-400 border-t-transparent rounded-full animate-spin"></span>
+    </div>
     } @else {
-      @if (error()) {
-        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-500 dark:text-red-400 text-sm px-4 py-3 rounded-xl mb-6">
-          {{ error() }}
-        </div>
-      }
+    @if (error()) {
+    <div
+      class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-500 dark:text-red-400 text-sm px-4 py-3 rounded-xl mb-6">
+      {{ error() }}
+    </div>
+    }
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 space-y-6">
-          <section class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6">
-            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>📚</span> Mis Materias
-            </h2>
-            @if (subjects().length === 0) {
-              <p class="text-sm text-stone-400 dark:text-stone-500">No tienes materias asignadas.</p>
-            } @else {
-              <div class="space-y-3">
-                @for (s of subjects(); track s.id) {
-                  <div class="p-4 bg-stone-50 dark:bg-neutral-900 rounded-xl">
-                    <div class="flex items-center justify-between">
-                      <div>
-                        <p class="font-medium">{{ s.name }}</p>
-                        <p class="text-xs text-stone-400 dark:text-stone-500 mt-0.5">{{ s.credits }} créditos</p>
-                      </div>
-                    </div>
-                    @if (s.description) {
-                      <p class="text-xs text-stone-400 dark:text-stone-500 mt-2">{{ s.description }}</p>
-                    }
-                  </div>
-                }
+    <div class="flex flex-col lg:flex-row gap-6">
+      <div class="flex-1 space-y-6" [class.lg:max-w-2xl]="!!selectedSubject()">
+        <section class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6">
+          <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span>📚</span> Mis Materias
+            <span class="text-xs text-stone-400 font-normal">({{ subjects().length }})</span>
+          </h2>
+          @if (subjects().length === 0) {
+          <p class="text-sm text-stone-400 dark:text-stone-500">No tienes materias asignadas.</p>
+          } @else {
+          <div class="space-y-3">
+            @for (s of subjects(); track s.id) {
+            <button (click)="selectSubject(s)"
+              class="w-full text-left p-4 rounded-xl border-2 transition-all cursor-pointer"
+              [class.bg-sky-50]="selectedSubject()?.id === s.id"
+              [class.dark:bg-sky-900/20]="selectedSubject()?.id === s.id"
+              [class.border-sky-400]="selectedSubject()?.id === s.id"
+              [class.dark:border-sky-600]="selectedSubject()?.id === s.id"
+              [class.bg-stone-50]="selectedSubject()?.id !== s.id"
+              [class.dark:bg-neutral-900]="selectedSubject()?.id !== s.id"
+              [class.border-transparent]="selectedSubject()?.id !== s.id"
+              [class.hover:border-stone-300]="selectedSubject()?.id !== s.id"
+              [class.dark:hover:border-neutral-600]="selectedSubject()?.id !== s.id">
+              <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                  <p class="font-medium">{{ s.name }}</p>
+                  <p class="text-xs text-stone-400 dark:text-stone-500 mt-0.5">{{ s.credits }} créditos</p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 ml-4">
+                  <span class="text-sm font-bold text-sky-600 dark:text-sky-400">{{ getStudentCount(s.id) }}</span>
+                  <span class="text-xs text-stone-400">alumnos</span>
+                  <span class="text-lg text-stone-400 dark:text-stone-500 transition-transform"
+                    [class.rotate-90]="selectedSubject()?.id === s.id">›</span>
+                </div>
               </div>
+              @if (s.description) {
+              <p class="text-xs text-stone-400 dark:text-stone-500 mt-2 truncate">{{ s.description }}</p>
+              }
+            </button>
             }
-          </section>
+          </div>
+          }
+        </section>
 
-          <section class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6">
-            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>👨‍🎓</span> Estudiantes por Materia
-            </h2>
-            @if (studentsBySubject().length === 0) {
-              <p class="text-sm text-stone-400 dark:text-stone-500">No hay estudiantes inscritos.</p>
-            } @else {
-              <div class="space-y-4">
-                @for (group of studentsBySubject(); track group.subjectName) {
-                  <div>
-                    <p class="text-sm font-medium text-sky-600 dark:text-sky-400 mb-2">{{ group.subjectName }}</p>
-                    <div class="flex flex-wrap gap-2">
-                      @for (e of group.students; track e.id) {
-                        <span class="text-xs bg-stone-100 dark:bg-neutral-900 px-3 py-1.5 rounded-full text-stone-600 dark:text-stone-400">
-                          {{ e.studentName }}
-                        </span>
-                      }
-                    </div>
-                  </div>
-                }
-              </div>
-            }
-          </section>
-        </div>
-
-        <div class="space-y-6">
-          <section class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6">
-            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>📊</span> Resumen
-            </h2>
-            <div class="space-y-4">
-              <div class="text-center p-4 bg-sky-50 dark:bg-sky-900/20 rounded-xl">
-                <p class="text-3xl font-bold text-sky-600 dark:text-sky-400">{{ subjects().length }}</p>
-                <p class="text-xs text-stone-400 dark:text-stone-500 mt-1">Materias Asignadas</p>
-              </div>
-              <div class="text-center p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
-                <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{{ studentsBySubject().reduce((acc, g) => acc + g.students.length, 0) }}</p>
-                <p class="text-xs text-stone-400 dark:text-stone-500 mt-1">Total Estudiantes</p>
-              </div>
+        <section class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6">
+          <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span>📊</span> Resumen
+          </h2>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="text-center p-4 bg-sky-50 dark:bg-sky-900/20 rounded-xl">
+              <p class="text-3xl font-bold text-sky-600 dark:text-sky-400">{{ subjects().length }}</p>
+              <p class="text-xs text-stone-400 dark:text-stone-500 mt-1">Materias Asignadas</p>
             </div>
-          </section>
-        </div>
+            <div class="text-center p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
+              <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{{ totalStudents() }}</p>
+              <p class="text-xs text-stone-400 dark:text-stone-500 mt-1">Total Estudiantes</p>
+            </div>
+          </div>
+        </section>
       </div>
+
+      @if (selectedSubject(); as subject) {
+      <div class="w-full lg:w-80 shrink-0">
+        <section
+          class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6 lg:sticky lg:top-8">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold truncate">{{ subject.name }}</h2>
+            <button (click)="selectedSubject.set(null)"
+              class="text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 text-xl leading-none cursor-pointer shrink-0 ml-2">&times;</button>
+          </div>
+          @let students = subjectStudents()[subject.id];
+          @if (!students || students.length === 0) {
+          <p class="text-sm text-stone-400 dark:text-stone-500">No hay estudiantes inscritos.</p>
+          } @else {
+          <p class="text-xs text-stone-400 dark:text-stone-500 mb-3">{{ students.length }} estudiante(s)</p>
+          <div class="space-y-2">
+            @for (e of students; track e.id) {
+            <div class="p-3 bg-stone-50 dark:bg-neutral-900 rounded-xl">
+              <p class="text-sm font-medium">{{ e.studentName }}</p>
+            </div>
+            }
+          </div>
+          }
+        </section>
+      </div>
+      }
+    </div>
     }
   </main>
 </div>

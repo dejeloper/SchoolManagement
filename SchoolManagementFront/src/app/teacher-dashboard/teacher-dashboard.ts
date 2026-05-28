@@ -13,7 +13,8 @@ import { Subject, Enrollment } from '../../shared/interfaces/models';
 export class TeacherDashboard implements OnInit {
   user = signal<any>(null);
   subjects = signal<Subject[]>([]);
-  studentsBySubject = signal<{ subjectName: string; students: Enrollment[] }[]>([]);
+  subjectStudents = signal<Record<number, Enrollment[]>>({});
+  selectedSubject = signal<Subject | null>(null);
   loading = signal(true);
   error = signal('');
 
@@ -43,18 +44,32 @@ export class TeacherDashboard implements OnInit {
             this.enrollmentService.getBySubject(s.id).subscribe({
               next: (r) => {
                 if (r.isSuccess && r.value) {
-                  this.studentsBySubject.update(list => [...list, { subjectName: s.name, students: r.value! }]);
+                  this.subjectStudents.update(map => ({ ...map, [s.id]: r.value! }));
                 }
               },
             });
           });
         } else {
-          this.error.set(res.message);
+          this.error.set(res.message || 'Error al cargar materias.');
         }
       },
       error: (err) => this.error.set(err.error?.message || 'Error al cargar materias.'),
       complete: () => this.loading.set(false),
     });
+  }
+
+  selectSubject(subject: Subject): void {
+    this.selectedSubject.set(
+      this.selectedSubject()?.id === subject.id ? null : subject
+    );
+  }
+
+  getStudentCount(subjectId: number): number {
+    return this.subjectStudents()[subjectId]?.length ?? 0;
+  }
+
+  totalStudents(): number {
+    return Object.values(this.subjectStudents()).reduce((acc, arr) => acc + arr.length, 0);
   }
 
   logout(): void {
