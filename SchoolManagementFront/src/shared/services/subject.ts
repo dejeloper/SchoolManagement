@@ -13,6 +13,10 @@ export class SubjectService {
     return this.api.get<Subject[]>(this.path);
   }
 
+  getByTeacher(teacherId: number): Observable<ApiResult<Subject[]>> {
+    return this.api.get<Subject[]>(`${this.path}/teacher/${teacherId}`);
+  }
+
   getById(id: number): Observable<ApiResult<Subject>> {
     return this.api.get<Subject>(`${this.path}/${id}`);
   }

@@ -78,8 +78,10 @@ export class LoginComponent {
       next: (res: any) => {
         this.loading.set(false);
         if (res.isSuccess && res.value) {
-          this.auth.saveSession(res.value, this.selectedRole()!);
-          this.router.navigate(['/dashboard']);
+          const role = this.selectedRole()!;
+          this.auth.saveSession(res.value, role);
+          const route = role === 'student' ? '/dashboard/student' : role === 'teacher' ? '/dashboard/teacher' : '/dashboard';
+          this.router.navigate([route]);
         } else {
           this.error.set(res.message || 'Correo no encontrado.');
         }
