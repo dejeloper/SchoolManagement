@@ -15,7 +15,7 @@ public class TeachersController(ITeacherService teacherService) : ControllerBase
     {
         var result = await _teacherService.GetAllAsync();
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -28,7 +28,7 @@ public class TeachersController(ITeacherService teacherService) : ControllerBase
     {
         var result = await _teacherService.GetByIdAsync(id);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -41,7 +41,7 @@ public class TeachersController(ITeacherService teacherService) : ControllerBase
     {
         var result = await _teacherService.CreateAsync(dto);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -58,7 +58,7 @@ public class TeachersController(ITeacherService teacherService) : ControllerBase
     {
         var result = await _teacherService.UpdateAsync(id, dto);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -71,7 +71,7 @@ public class TeachersController(ITeacherService teacherService) : ControllerBase
     {
         var result = await _teacherService.SoftDeleteAsync(id);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }

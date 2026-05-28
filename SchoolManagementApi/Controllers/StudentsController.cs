@@ -16,7 +16,7 @@ public class StudentsController(IStudentService studentService) : ControllerBase
     {
         var result = await _studentService.GetAllAsync();
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -30,7 +30,7 @@ public class StudentsController(IStudentService studentService) : ControllerBase
     {
         var result = await _studentService.GetByIdAsync(id);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -44,7 +44,7 @@ public class StudentsController(IStudentService studentService) : ControllerBase
     {
         var result = await _studentService.CreateAsync(createStudentDto);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -62,7 +62,7 @@ public class StudentsController(IStudentService studentService) : ControllerBase
     {
         var result = await _studentService.UpdateAsync(id, updateStudentDto);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -76,7 +76,7 @@ public class StudentsController(IStudentService studentService) : ControllerBase
     {
         var result = await _studentService.SoftDeleteAsync(id);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }

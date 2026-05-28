@@ -20,7 +20,7 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         var result = await _authService.LoginAsync(loginDto.Email, loginDto.Role);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }

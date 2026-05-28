@@ -15,7 +15,7 @@ public class EnrollmentsController(IEnrollmentService enrollmentService) : Contr
     {
         var result = await _enrollmentService.GetAllAsync();
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -28,7 +28,7 @@ public class EnrollmentsController(IEnrollmentService enrollmentService) : Contr
     {
         var result = await _enrollmentService.GetByIdAsync(id);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -41,7 +41,7 @@ public class EnrollmentsController(IEnrollmentService enrollmentService) : Contr
     {
         var result = await _enrollmentService.GetByStudentIdAsync(studentId);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -54,7 +54,7 @@ public class EnrollmentsController(IEnrollmentService enrollmentService) : Contr
     {
         var result = await _enrollmentService.GetClassmatesAsync(studentId);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -67,7 +67,7 @@ public class EnrollmentsController(IEnrollmentService enrollmentService) : Contr
     {
         var result = await _enrollmentService.GetStudentAcademicRecordAsync(studentId);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -80,7 +80,7 @@ public class EnrollmentsController(IEnrollmentService enrollmentService) : Contr
     {
         var result = await _enrollmentService.GetBySubjectIdAsync(subjectId);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -93,7 +93,7 @@ public class EnrollmentsController(IEnrollmentService enrollmentService) : Contr
     {
         var result = await _enrollmentService.CreateAsync(createEnrollmentDto);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -110,7 +110,7 @@ public class EnrollmentsController(IEnrollmentService enrollmentService) : Contr
     {
         var result = await _enrollmentService.SoftDeleteAsync(id);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }

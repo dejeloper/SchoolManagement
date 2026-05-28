@@ -16,7 +16,7 @@ public class SubjectsController(ISubjectService subjectService) : ControllerBase
     {
         var result = await _subjectService.GetAllAsync();
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -30,7 +30,7 @@ public class SubjectsController(ISubjectService subjectService) : ControllerBase
     {
         var result = await _subjectService.GetByIdAsync(id);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -43,7 +43,7 @@ public class SubjectsController(ISubjectService subjectService) : ControllerBase
     public async Task<IActionResult> GetByTeacherId(int teacherId)
     {
         var result = await _subjectService.GetByTeacherIdAsync(teacherId);
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -56,7 +56,7 @@ public class SubjectsController(ISubjectService subjectService) : ControllerBase
     {
         var result = await _subjectService.CreateAsync(createSubjectDto);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -74,7 +74,7 @@ public class SubjectsController(ISubjectService subjectService) : ControllerBase
     {
         var result = await _subjectService.UpdateAsync(id, updateSubjectDto);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
@@ -88,7 +88,7 @@ public class SubjectsController(ISubjectService subjectService) : ControllerBase
     {
         var result = await _subjectService.SoftDeleteAsync(id);
 
-        if (result.Error)
+        if (!result.IsSuccess)
         {
             return StatusCode(result.StatusCode, result);
         }
