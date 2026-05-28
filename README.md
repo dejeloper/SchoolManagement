@@ -1,6 +1,6 @@
 # 🎓 Sistema de Gestión Académica (SisteAca)
 
-Un sistema completo de gestión escolar con backend en **ASP.NET Core 8** y frontend en **Angular**.
+Un sistema completo de gestión escolar con backend en **ASP.NET Core 8** y frontend en **Angular 21**.
 
 ## 📋 ¿De qué se trata?
 
@@ -13,8 +13,8 @@ Un sistema completo de gestión escolar con backend en **ASP.NET Core 8** y fron
 
 **Stack tecnológico:**
 
-- **Backend:** ASP.NET Core 8 (C#)
-- **Frontend:** Angular (TypeScript)
+- **Backend:** ASP.NET Core 8 (C# 12)
+- **Frontend:** Angular 21 (TypeScript 5.9)
 - **Base de datos:** MySQL
 - **ORM:** Entity Framework Core
 
@@ -67,7 +67,7 @@ Ver documentación completa del backend en → [`documentation/BACKEND.md`](docu
 
 ```bash
 # Navegar a la carpeta del frontend
-cd frontend
+cd SchoolManagementFront
 
 # Instalar dependencias
 npm install
@@ -97,25 +97,9 @@ Ver documentación completa del frontend en → [`documentation/FRONTEND.md`](do
 
 ---
 
-## ✅ Estado del proyecto
-
-| Fase | Componente     | Estado           |
-| ---- | -------------- | ---------------- |
-| 1-2  | Backend + DB   | ✅ Completado    |
-| 3    | Frontend       | 🔄 En desarrollo |
-| 4    | Tests & Deploy | ⏳ Por hacer     |
-
----
-
 ## 👨‍💻 Autor
 
 **Jhonatan Guerrero**
-
----
-
-## 🤖 Documentación generada con IA
-
-Documentación realizada con [**Claude Code**](https://claude.com/claude-code) - Anthropic's official CLI for Claude
 
 ---
 
@@ -142,3 +126,9 @@ Documentación realizada con [**Claude Code**](https://claude.com/claude-code) -
 - 𝕏 (Twitter): [@dejeloper](https://x.com/dejeloper)
 - 📷 Instagram: [@dejeloper](https://instagram.com/dejeloper)
 - 💼 LinkedIn: [@dejeloper](https://linkedin.com/in/dejeloper)
+
+---
+
+## 🤖 Documentación generada con IA
+
+Documentación realizada con [**Claude Code**](https://claude.com/claude-code) - Anthropic's official CLI for Claude
