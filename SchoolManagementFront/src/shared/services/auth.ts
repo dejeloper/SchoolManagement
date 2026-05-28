@@ -1,23 +1,21 @@
-import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { LoginResponse, SessionUser } from '../interfaces/models';
-import { API_BASE } from '../api-base';
+import {Injectable, signal} from '@angular/core';
+import {Observable} from 'rxjs';
+import {LoginResponse, SessionUser} from '../interfaces/models';
+import {ApiService} from '../api.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AuthService {
-  private readonly apiUrl = API_BASE;
-
   currentUser = signal<SessionUser | null>(this.getSession());
 
-  constructor(private http: HttpClient) { }
+  constructor(private api: ApiService) { }
 
   login(email: string, role: 'student' | 'teacher'): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, { email, role });
+    const roleMap: Record<string, number> = {teacher: 0, student: 1};
+    return this.api.post<LoginResponse['value']>('/auth/login', {email, role: roleMap[role]});
   }
 
   saveSession(user: NonNullable<LoginResponse['value']>, role: 'student' | 'teacher'): void {
-    const session: SessionUser = { ...user, role };
+    const session: SessionUser = {...user, role};
     localStorage.setItem('session', JSON.stringify(session));
     this.currentUser.set(session);
   }
