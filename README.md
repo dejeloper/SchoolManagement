@@ -143,26 +143,6 @@ Ver documentación completa del frontend en → [`documentation/FRONTEND.md`](do
 
 **Jhonatan Guerrero**
 
----
-
-## ⚠️ Disclaimer y Términos de Uso
-
-**Este proyecto es de carácter educativo y experimental.** No es un producto listo para producción.
-
-### Limitaciones de Responsabilidad
-
-- ❌ **Sin soporte técnico:** No ofrezco soporte, mantenimiento ni resolución de problemas
-- ❌ **Sin garantías:** El código se proporciona "tal cual" sin garantías de funcionamiento
-- ❌ **Uso personal únicamente:** Este código es para propósitos educativos y de prueba
-
-### Restricciones de Uso
-
-- 🚫 **No monetizable:** No puedes usar este código para generar ingresos directos o indirectos sin autorización expresa
-- 🚫 **No comercializable:** No está permitido venderlo, alquilarlo o usarlo en productos comerciales
-- 📞 **Contacto requerido:** Si deseas usar este código con fines lucrativos, debes contactarme primero
-
-**Si tienes consultas o necesitas permiso para usar el código comercialmente, contáctame:**
-
 - 📧 Email: [jhonatanguerrero@outlook.com](mailto:jhonatanguerrero@outlook.com)
 - 🌐 Web: [dejeloper.com](https://dejeloper.com)
 - 𝕏 (Twitter): [@dejeloper](https://x.com/dejeloper)
