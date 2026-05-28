@@ -1,14 +1,13 @@
 import { Routes } from '@angular/router';
+import { authRoutes } from './auth.routes';
+import { dashboardRoutes } from './dashboard.routes';
+import { studentsRoutes } from './students.routes';
+import { usersRoutes } from './users.routes';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  {
-    path: 'login',
-    loadComponent: () => import('./login/login').then(m => m.LoginComponent),
-  },
-  {
-    path: 'dashboard',
-    loadComponent: () => import('./dashboard/dashboard').then(m => m.Dashboard),
-  },
+  ...authRoutes,
+  ...dashboardRoutes,
+  ...studentsRoutes,
+  ...usersRoutes,
   { path: '**', redirectTo: 'login' },
 ];
