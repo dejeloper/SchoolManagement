@@ -45,25 +45,24 @@ export interface UpdateTeacherDto {
 export interface Subject {
   id: number;
   name: string;
-  code: string;
+  description: string | null;
   credits: number;
   teacherId: number;
-  teacherName?: string;
-  createdAt: string;
+  teacherName: string;
 }
 
 export interface CreateSubjectDto {
   name: string;
-  code: string;
-  credits: number;
+  description?: string | null;
   teacherId: number;
+  credits: number;
 }
 
 export interface UpdateSubjectDto {
   name: string;
-  code: string;
-  credits: number;
+  description?: string | null;
   teacherId: number;
+  credits: number;
 }
 
 export interface Enrollment {

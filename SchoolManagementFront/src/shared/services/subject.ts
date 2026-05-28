@@ -1,31 +1,31 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { ApiResult, Subject, CreateSubjectDto, UpdateSubjectDto } from '../interfaces/models';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {ApiResult, Subject, CreateSubjectDto, UpdateSubjectDto} from '../interfaces/models';
+import {ApiService} from '../api.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class SubjectService {
-  private readonly url = 'http://localhost:5000/api/subjects';
+  private readonly path = '/subjects';
 
-  constructor(private http: HttpClient) { }
+  constructor(private api: ApiService) { }
 
   getAll(): Observable<ApiResult<Subject[]>> {
-    return this.http.get<ApiResult<Subject[]>>(this.url);
+    return this.api.get<Subject[]>(this.path);
   }
 
   getById(id: number): Observable<ApiResult<Subject>> {
-    return this.http.get<ApiResult<Subject>>(`${this.url}/${id}`);
+    return this.api.get<Subject>(`${this.path}/${id}`);
   }
 
   create(dto: CreateSubjectDto): Observable<ApiResult<Subject>> {
-    return this.http.post<ApiResult<Subject>>(this.url, dto);
+    return this.api.post<Subject>(this.path, dto);
   }
 
   update(id: number, dto: UpdateSubjectDto): Observable<ApiResult<Subject>> {
-    return this.http.put<ApiResult<Subject>>(`${this.url}/${id}`, dto);
+    return this.api.put<Subject>(`${this.path}/${id}`, dto);
   }
 
   delete(id: number): Observable<ApiResult<null>> {
-    return this.http.delete<ApiResult<null>>(`${this.url}/${id}`);
+    return this.api.delete<null>(`${this.path}/${id}`);
   }
 }

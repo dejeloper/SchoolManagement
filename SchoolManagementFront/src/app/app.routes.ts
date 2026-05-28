@@ -11,6 +11,7 @@ export const routes: Routes = [
   ...dashboardRoutes,
   ...studentsRoutes,
   ...teachersRoutes,
+  ...subjectsRoutes,
   ...usersRoutes,
   {path: '**', redirectTo: 'login'},
 ];
