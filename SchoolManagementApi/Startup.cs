@@ -22,6 +22,16 @@ namespace SchoolManagementApi
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<AppDbContext>(options =>
@@ -40,6 +50,8 @@ namespace SchoolManagementApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("AllowAngularApp");
 
             app.UseHttpsRedirection();
 
