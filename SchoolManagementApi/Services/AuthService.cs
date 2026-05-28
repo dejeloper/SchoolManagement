@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SchoolManagementApi.Data;
 using SchoolManagementApi.DTOs.Auth;
 using SchoolManagementApi.DTOs.Common;
+using SchoolManagementApi.Entities;
 
 namespace SchoolManagementApi.Services;
 
@@ -13,6 +14,8 @@ public class AuthService(AppDbContext context) : IAuthService
     {
         try
         {
+            LoginResponseDto? loggedUser = null;
+
             if (userRole == UserRole.Student)
             {
                 var student = await _context.Students
@@ -20,18 +23,14 @@ public class AuthService(AppDbContext context) : IAuthService
 
                 if (student != null)
                 {
-                    return Result<LoginResponseDto>.Success(
-                        new LoginResponseDto
-                        {
-                            Id = student.Id,
-                            Email = student.Email,
-                            Name = student.Name,
-                            Surname = student.Surname,
-                            Role = UserRole.Student 
-                        },
-                        "Inicio de sesión exitoso.",
-                        200
-                    );
+                    loggedUser = new LoginResponseDto
+                    {
+                        Id = student.Id,
+                        Email = student.Email,
+                        Name = student.Name,
+                        Surname = student.Surname,
+                        Role = UserRole.Student
+                    };
                 }
             }
 
@@ -42,19 +41,39 @@ public class AuthService(AppDbContext context) : IAuthService
 
                 if (teacher != null)
                 {
-                    return Result<LoginResponseDto>.Success(
-                        new LoginResponseDto
-                        {
-                            Id = teacher.Id,
-                            Email = teacher.Email,
-                            Name = teacher.Name,
-                            Surname = teacher.Surname,
-                            Role = UserRole.Teacher
-                        },
-                        "Inicio de sesión exitoso.",
-                        200
-                    );
+                    loggedUser = new LoginResponseDto
+                    {
+                        Id = teacher.Id,
+                        Email = teacher.Email,
+                        Name = teacher.Name,
+                        Surname = teacher.Surname,
+                        Role = UserRole.Teacher
+                    };
                 }
+            }
+
+            if (userRole is UserRole.Admin or UserRole.Auxiliar)
+            {
+                var rolName = userRole == UserRole.Admin ? "admin" : "auxiliar";
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Usuario == email && u.Rol == rolName && u.DeletedAt == null);
+
+                if (user != null)
+                {
+                    loggedUser = new LoginResponseDto
+                    {
+                        Id = user.Id,
+                        Email = user.Usuario,
+                        Name = user.Usuario,
+                        Surname = user.Rol,
+                        Role = userRole
+                    };
+                }
+            }
+
+            if (loggedUser != null)
+            {
+                return Result<LoginResponseDto>.Success(loggedUser, "Inicio de sesión exitoso.", 200);
             }
 
             return Result<LoginResponseDto>.Failure(
@@ -70,7 +89,7 @@ public class AuthService(AppDbContext context) : IAuthService
             );
         }
     }
- 
+
 }
 
 public interface IAuthService

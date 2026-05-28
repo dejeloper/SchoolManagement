@@ -18,6 +18,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Enrollment> Enrollments { get; set; }
 
+    public virtual DbSet<User> Users { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -209,6 +211,46 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(x => x.SubjectId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_enrollments_subject");
+
+            entity.HasQueryFilter(x => x.DeletedAt == null);
+        });
+
+        // Users
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("users");
+
+            entity.HasKey(x => x.Id);
+
+            entity.HasIndex(x => x.Usuario)
+                .IsUnique();
+
+            entity.HasIndex(x => x.Rol);
+
+            entity.Property(x => x.Id)
+                .HasColumnName("id");
+
+            entity.Property(x => x.Usuario)
+                .HasMaxLength(100)
+                .IsRequired()
+                .HasColumnName("usuario");
+
+            entity.Property(x => x.Rol)
+                .HasMaxLength(50)
+                .IsRequired()
+                .HasColumnName("rol");
+
+            entity.Property(x => x.CreatedAt)
+                .HasColumnName("created_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.Property(x => x.UpdatedAt)
+                .HasColumnName("updated_at")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAddOrUpdate();
+
+            entity.Property(x => x.DeletedAt)
+                .HasColumnName("deleted_at");
 
             entity.HasQueryFilter(x => x.DeletedAt == null);
         });
