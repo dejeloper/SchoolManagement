@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { APP_NAME } from '../../shared/constants';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StudentService } from '../../shared/services/student';
@@ -18,6 +19,8 @@ export class StudentFormComponent implements OnInit {
   loading = signal(false);
   saving = signal(false);
   error = signal('');
+
+  appName = APP_NAME;
 
   constructor(
     private service: StudentService,
@@ -99,3 +102,4 @@ export class StudentFormComponent implements OnInit {
     this.router.navigate(['/dashboard/students']);
   }
 }
+

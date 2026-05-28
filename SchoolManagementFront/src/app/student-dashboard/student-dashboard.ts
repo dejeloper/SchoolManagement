@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { APP_NAME } from '../../shared/constants';
 import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth';
 import { EnrollmentService } from '../../shared/services/enrollment';
@@ -17,6 +18,8 @@ export class StudentDashboard implements OnInit {
   classmates = signal<ClassmatesBySubject[]>([]);
   loading = signal(true);
   error = signal('');
+
+  appName = APP_NAME;
 
   constructor(
     private auth: AuthService,
@@ -73,3 +76,4 @@ export class StudentDashboard implements OnInit {
     this.router.navigate(['/login']);
   }
 }
+

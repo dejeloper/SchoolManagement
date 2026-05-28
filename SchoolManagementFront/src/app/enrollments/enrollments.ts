@@ -1,4 +1,5 @@
 import {Component, OnInit, computed, signal} from '@angular/core';
+import { APP_NAME } from '../../shared/constants';
 import {Router} from '@angular/router';
 import {DatePipe} from '@angular/common';
 import {EnrollmentService} from '../../shared/services/enrollment';
@@ -23,6 +24,8 @@ export class EnrollmentsComponent implements OnInit {
     const start = (this.currentPage() - 1) * this.pageSize;
     return this.enrollments().slice(start, start + this.pageSize);
   });
+
+  appName = APP_NAME;
 
   constructor(
     private service: EnrollmentService,
@@ -81,3 +84,4 @@ export class EnrollmentsComponent implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 }
+

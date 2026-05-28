@@ -1,4 +1,5 @@
 import {Component, OnInit, signal} from '@angular/core';
+import { APP_NAME } from '../../shared/constants';
 import {FormsModule} from '@angular/forms';
 import {Router, ActivatedRoute} from '@angular/router';
 import {EnrollmentService} from '../../shared/services/enrollment';
@@ -21,6 +22,8 @@ export class EnrollmentFormComponent implements OnInit {
   saving = signal(false);
   error = signal('');
   isStudentEnrolling = signal(false);
+
+  appName = APP_NAME;
 
   constructor(
     private enrollmentService: EnrollmentService,
@@ -94,3 +97,4 @@ export class EnrollmentFormComponent implements OnInit {
     this.router.navigate([this.isStudentEnrolling() ? '/dashboard/student' : '/dashboard/enrollments']);
   }
 }
+

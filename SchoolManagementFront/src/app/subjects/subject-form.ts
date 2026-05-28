@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { APP_NAME } from '../../shared/constants';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubjectService } from '../../shared/services/subject';
@@ -23,6 +24,8 @@ export class SubjectFormComponent implements OnInit {
 
   teachers = signal<Teacher[]>([]);
   teachersLoading = signal(false);
+
+  appName = APP_NAME;
 
   constructor(
     private service: SubjectService,
@@ -131,3 +134,4 @@ export class SubjectFormComponent implements OnInit {
     this.router.navigate(['/dashboard/subjects']);
   }
 }
+

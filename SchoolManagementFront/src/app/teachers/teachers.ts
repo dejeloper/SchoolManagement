@@ -1,4 +1,5 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
+import { APP_NAME } from '../../shared/constants';
 import { Router } from '@angular/router';
 import { TeacherService } from '../../shared/services/teacher';
 import { Teacher } from '../../shared/interfaces/models';
@@ -21,6 +22,8 @@ export class TeachersComponent implements OnInit {
     const start = (this.currentPage() - 1) * this.pageSize;
     return this.teachers().slice(start, start + this.pageSize);
   });
+
+  appName = APP_NAME;
 
   constructor(
     private service: TeacherService,
@@ -83,3 +86,4 @@ export class TeachersComponent implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 }
+

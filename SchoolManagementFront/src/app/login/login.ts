@@ -1,4 +1,5 @@
 import {Component, computed, signal} from '@angular/core';
+import { APP_NAME } from '../../shared/constants';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../shared/services/auth';
@@ -34,6 +35,8 @@ export class LoginComponent {
     }
     return '';
   });
+
+  appName = APP_NAME;
 
   constructor(private auth: AuthService, private router: Router) { }
 
@@ -93,3 +96,4 @@ export class LoginComponent {
     });
   }
 }
+

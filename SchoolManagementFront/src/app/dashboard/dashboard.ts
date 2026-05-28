@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { APP_NAME } from '../../shared/constants';
 import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth';
 
@@ -62,6 +63,8 @@ export class Dashboard implements OnInit {
     },
   ];
 
+  appName = APP_NAME;
+
   constructor(private auth: AuthService, private router: Router) { }
 
   ngOnInit(): void {
@@ -78,3 +81,4 @@ export class Dashboard implements OnInit {
     this.router.navigate(['/login']);
   }
 }
+

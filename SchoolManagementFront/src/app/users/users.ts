@@ -1,4 +1,5 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
+import { APP_NAME } from '../../shared/constants';
 import { Router } from '@angular/router';
 import { UserService } from '../../shared/services/user';
 import { User } from '../../shared/interfaces/models';
@@ -21,6 +22,8 @@ export class UsersComponent implements OnInit {
     const start = (this.currentPage() - 1) * this.pageSize;
     return this.users().slice(start, start + this.pageSize);
   });
+
+  appName = APP_NAME;
 
   constructor(
     private service: UserService,
@@ -91,3 +94,4 @@ export class UsersComponent implements OnInit {
     return map[rol] || 'bg-stone-50 dark:bg-neutral-700 text-stone-500 dark:text-stone-400 border-stone-200 dark:border-neutral-600';
   }
 }
+
