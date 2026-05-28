@@ -50,6 +50,40 @@
       </button>
 
     </div>
+
+    <div class="mt-6 flex justify-center">
+      <button (click)="selectRole('admin')"
+        class="group bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6 text-left flex items-center gap-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-300 dark:hover:border-emerald-700 cursor-pointer w-full max-w-sm">
+        <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-2xl">
+          ⚙️
+        </div>
+        <div class="flex-1">
+          <h2 class="text-base font-semibold text-stone-800 dark:text-stone-100">Administrador</h2>
+          <p class="text-sm text-stone-400 dark:text-stone-500 leading-relaxed">
+            Acceso al panel de administración del sistema
+          </p>
+        </div>
+        <span
+          class="text-stone-300 dark:text-neutral-600 text-lg transition-all duration-200 group-hover:text-emerald-500 group-hover:translate-x-1">→</span>
+      </button>
+    </div>
+
+    <div class="mt-4 flex justify-center">
+      <button (click)="selectRole('auxiliar')"
+        class="group bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6 text-left flex items-center gap-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-violet-300 dark:hover:border-violet-700 cursor-pointer w-full max-w-sm">
+        <div class="w-12 h-12 rounded-xl bg-violet-50 dark:bg-violet-900/20 flex items-center justify-center text-2xl">
+          📋
+        </div>
+        <div class="flex-1">
+          <h2 class="text-base font-semibold text-stone-800 dark:text-stone-100">Auxiliar</h2>
+          <p class="text-sm text-stone-400 dark:text-stone-500 leading-relaxed">
+            Apoyo en la gestión académica del sistema
+          </p>
+        </div>
+        <span
+          class="text-stone-300 dark:text-neutral-600 text-lg transition-all duration-200 group-hover:text-violet-500 group-hover:translate-x-1">→</span>
+      </button>
+    </div>
   </main>
   }
 
@@ -68,7 +102,7 @@
         <span
           class="inline-block text-xs font-medium tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 border"
           [class]="badgeClass()">
-          {{ selectedRole() === 'student' ? 'Estudiante' : 'Profesor' }}
+          {{ selectedRole() === 'student' ? 'Estudiante' : selectedRole() === 'teacher' ? 'Profesor' : selectedRole() === 'admin' ? 'Administrador' : 'Auxiliar' }}
         </span>
         <h1 class="text-3xl font-semibold text-stone-800 dark:text-stone-100 tracking-tight mb-2">
           Iniciar Sesión
@@ -107,7 +141,7 @@
 
         <button type="submit" [disabled]="loading() || !email().trim() || !password().trim()"
           class="w-full py-3.5 rounded-xl text-sm font-medium flex items-center justify-center transition-all duration-200 mt-1 border-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 hover:-translate-y-px text-white"
-          [class.bg-amber-500]="selectedRole() === 'student'" [class.bg-sky-500]="selectedRole() === 'teacher'">
+          [class.bg-amber-500]="selectedRole() === 'student'" [class.bg-sky-500]="selectedRole() === 'teacher'" [class.bg-emerald-500]="selectedRole() === 'admin'" [class.bg-violet-500]="selectedRole() === 'auxiliar'">
           @if (!loading()) {
           <span>Iniciar Sesión</span>
           } @else {

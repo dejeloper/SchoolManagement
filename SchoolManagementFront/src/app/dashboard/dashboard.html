@@ -1,3 +1,50 @@
+@if (user?.role === 'admin' || user?.role === 'auxiliar') {
+<div class="min-h-screen bg-stone-100 dark:bg-neutral-900 text-stone-800 dark:text-stone-200 font-sans">
+
+  <header class="flex items-center justify-between px-8 py-5 border-b border-stone-200 dark:border-neutral-800">
+    <div class="flex items-center gap-3">
+      <span class="text-amber-500 text-xl">◆</span>
+      <span class="text-lg font-semibold tracking-widest">SisTeAca</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm text-stone-500 dark:text-stone-400">{{ user?.name }}</span>
+      <span
+        class="text-xs font-medium tracking-widest uppercase px-3 py-1 rounded-full border"
+        [class]="user?.role === 'admin' ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800' : 'bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 border-violet-200 dark:border-violet-800'">
+        {{ user?.role === 'admin' ? 'Administrador' : 'Auxiliar' }}
+      </span>
+      <button (click)="logout()"
+        class="bg-transparent border border-stone-300 dark:border-neutral-700 text-stone-500 dark:text-stone-400 text-sm px-4 py-2 rounded-xl cursor-pointer hover:bg-stone-200 dark:hover:bg-neutral-800 transition-colors">
+        Cerrar sesión
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-8 py-12">
+    <h1 class="text-3xl font-semibold tracking-tight mb-2">Panel de Administración</h1>
+    <p class="text-sm text-stone-400 dark:text-stone-500 mb-10">Selecciona un módulo para gestionar</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      @for (card of adminCards; track card.label) {
+      <button (click)="navigateTo(card.route)"
+        class="group bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6 text-left flex flex-col gap-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+          [style.background]="card.bg" [style.color]="card.color">
+          {{ card.icon }}
+        </div>
+        <div>
+          <h2 class="text-base font-semibold">{{ card.label }}</h2>
+          <p class="text-sm text-stone-400 dark:text-stone-500 mt-1">{{ card.description }}</p>
+        </div>
+        <span
+          class="self-end text-stone-300 dark:text-neutral-600 text-lg transition-all duration-200 group-hover:text-amber-500 group-hover:translate-x-1">→</span>
+      </button>
+      }
+    </div>
+  </main>
+
+</div>
+} @else {
 <div
   style="min-height:100vh;background:#0d0f12;color:#e8e6e1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;gap:16px;">
   <p style="color:#5a5852;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">Bienvenido</p>
@@ -12,3 +59,4 @@
   </button>
   <p style="color:#33312e;font-size:13px;margin-top:16px;">— Dashboard completo próximamente —</p>
 </div>
+}

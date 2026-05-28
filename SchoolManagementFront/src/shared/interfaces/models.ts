@@ -105,7 +105,7 @@ export interface LoginResponse {
     id: number;
     name: string;
     email: string;
-    role: 'student' | 'teacher';
+    role: 'student' | 'teacher' | 'admin' | 'auxiliar';
   } | null;
 }
 
@@ -113,5 +113,5 @@ export interface SessionUser {
   id: number;
   name: string;
   email: string;
-  role: 'student' | 'teacher';
+  role: 'student' | 'teacher' | 'admin' | 'auxiliar';
 }

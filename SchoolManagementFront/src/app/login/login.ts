@@ -3,7 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../shared/services/auth';
 
-type Role = 'student' | 'teacher';
+type Role = 'student' | 'teacher' | 'admin' | 'auxiliar';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +25,12 @@ export class LoginComponent {
     }
     if (role === 'teacher') {
       return 'bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-900/20 dark:text-sky-400 dark:border-sky-800';
+    }
+    if (role === 'admin') {
+      return 'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800';
+    }
+    if (role === 'auxiliar') {
+      return 'bg-violet-50 text-violet-600 border-violet-200 dark:bg-violet-900/20 dark:text-violet-400 dark:border-violet-800';
     }
     return '';
   });

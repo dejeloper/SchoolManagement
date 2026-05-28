@@ -9,12 +9,12 @@ export class AuthService {
 
   constructor(private api: ApiService) { }
 
-  login(email: string, role: 'student' | 'teacher'): Observable<LoginResponse> {
-    const roleMap: Record<string, number> = {teacher: 0, student: 1};
+  login(email: string, role: 'student' | 'teacher' | 'admin' | 'auxiliar'): Observable<LoginResponse> {
+    const roleMap: Record<string, number> = {teacher: 1, student: 2, admin: 99, auxiliar: 98};
     return this.api.post<LoginResponse['value']>('/auth/login', {email, role: roleMap[role]});
   }
 
-  saveSession(user: NonNullable<LoginResponse['value']>, role: 'student' | 'teacher'): void {
+  saveSession(user: NonNullable<LoginResponse['value']>, role: 'student' | 'teacher' | 'admin' | 'auxiliar'): void {
     const session: SessionUser = {...user, role};
     localStorage.setItem('session', JSON.stringify(session));
     this.currentUser.set(session);
