@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth';
 import { EnrollmentService } from '../../shared/services/enrollment';
@@ -7,7 +6,7 @@ import { Enrollment, ClassmatesBySubject, StudentAcademicRecord } from '../../sh
 
 @Component({
   selector: 'app-student-dashboard',
-  imports: [DatePipe],
+  imports: [],
   templateUrl: './student-dashboard.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -63,6 +62,10 @@ export class StudentDashboard implements OnInit {
       },
       complete: () => this.loading.set(false),
     });
+  }
+
+  goToEnroll(): void {
+    this.router.navigate(['/dashboard/enrollments/new'], { queryParams: { studentId: this.user()?.id } });
   }
 
   logout(): void {

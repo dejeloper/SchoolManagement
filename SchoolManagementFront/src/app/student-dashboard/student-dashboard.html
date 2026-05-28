@@ -9,6 +9,10 @@
       <span class="text-xs font-medium tracking-widest uppercase px-3 py-1 rounded-full border bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800">
         Estudiante
       </span>
+      <button (click)="goToEnroll()"
+        class="bg-amber-500 hover:bg-amber-600 text-white text-sm px-5 py-2 rounded-xl cursor-pointer border-none transition-colors">
+        + Inscribir Materia
+      </button>
       <button (click)="logout()"
         class="bg-transparent border border-stone-300 dark:border-neutral-700 text-stone-500 dark:text-stone-400 text-sm px-4 py-2 rounded-xl cursor-pointer hover:bg-stone-200 dark:hover:bg-neutral-800 transition-colors">
         Cerrar sesión
@@ -31,81 +35,76 @@
         </div>
       }
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 space-y-6">
-          <section class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6">
-            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>📚</span> Mis Materias
-            </h2>
-            @if (enrollments().length === 0) {
-              <p class="text-sm text-stone-400 dark:text-stone-500">No estás inscrito en ninguna materia.</p>
-            } @else {
-              <div class="space-y-3">
-                @for (e of enrollments(); track e.id) {
-                  <div class="flex items-center justify-between p-4 bg-stone-50 dark:bg-neutral-900 rounded-xl">
-                    <div>
-                      <p class="font-medium">{{ e.subjectName }}</p>
-                      <p class="text-xs text-stone-400 dark:text-stone-500 mt-0.5">Inscrito {{ e.createdAt | date:'dd/MM/yyyy' }}</p>
-                    </div>
-                  </div>
-                }
-              </div>
-            }
-          </section>
-
-          <section class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6">
-            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>👥</span> Compañeros por Materia
-            </h2>
-            @if (classmates().length === 0) {
-              <p class="text-sm text-stone-400 dark:text-stone-500">Sin compañeros registrados.</p>
-            } @else {
-              <div class="space-y-4">
-                @for (group of classmates(); track group.subjectName) {
-                  <div>
-                    <p class="text-sm font-medium text-amber-600 dark:text-amber-400 mb-2">{{ group.subjectName }}</p>
-                    <div class="flex flex-wrap gap-2">
-                      @for (name of group.classmateNames; track name) {
-                        <span class="text-xs bg-stone-100 dark:bg-neutral-900 px-3 py-1.5 rounded-full text-stone-600 dark:text-stone-400">
-                          {{ name }}
-                        </span>
-                      }
-                    </div>
-                  </div>
-                }
-              </div>
-            }
-          </section>
+      @if (academicRecord(); as record) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+          <div class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6 flex items-center gap-5">
+            <div class="w-14 h-14 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-2xl">📊</div>
+            <div>
+              <p class="text-3xl font-bold text-amber-600 dark:text-amber-400">{{ record.totalCredits }}</p>
+              <p class="text-xs text-stone-400 dark:text-stone-500 mt-0.5">Créditos Totales</p>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6 flex items-center gap-5">
+            <div class="w-14 h-14 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-2xl">📚</div>
+            <div>
+              <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ record.subjects.length }}</p>
+              <p class="text-xs text-stone-400 dark:text-stone-500 mt-0.5">Materias Inscritas</p>
+            </div>
+          </div>
         </div>
 
-        <div class="space-y-6">
-          <section class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-6">
-            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>📊</span> Resumen Académico
-            </h2>
-            @if (academicRecord(); as record) {
-              <div class="space-y-4">
-                <div class="text-center p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
-                  <p class="text-3xl font-bold text-amber-600 dark:text-amber-400">{{ record.totalCredits }}</p>
-                  <p class="text-xs text-stone-400 dark:text-stone-500 mt-1">Créditos Totales</p>
-                </div>
-                <div class="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
-                  <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ record.subjects.length }}</p>
-                  <p class="text-xs text-stone-400 dark:text-stone-500 mt-1">Materias Inscritas</p>
-                </div>
-                @for (s of record.subjects; track s.subjectId) {
-                  <div class="p-3 bg-stone-50 dark:bg-neutral-900 rounded-xl">
-                    <p class="font-medium text-sm">{{ s.subjectName }}</p>
-                    <p class="text-xs text-stone-400 dark:text-stone-500 mt-0.5">{{ s.teacherName }} · {{ s.credits }} créd.</p>
+        <section class="mb-8">
+          <h2 class="text-lg font-semibold mb-4">Mis Materias</h2>
+          @if (record.subjects.length === 0) {
+            <div class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-8 text-center">
+              <p class="text-stone-400 dark:text-stone-500">No estás inscrito en ninguna materia.</p>
+            </div>
+          } @else {
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              @for (s of record.subjects; track s.subjectId) {
+                <div class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-5 flex flex-col gap-3">
+                  <div class="flex items-start justify-between">
+                    <h3 class="font-semibold text-base">{{ s.subjectName }}</h3>
+                    <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 whitespace-nowrap">{{ s.credits }} créd.</span>
                   </div>
-                }
-              </div>
-            } @else {
-              <p class="text-sm text-stone-400 dark:text-stone-500">No hay registro académico disponible.</p>
-            }
-          </section>
+                  <div class="flex items-center gap-2 text-sm text-stone-500 dark:text-stone-400">
+                    <span>👨‍🏫</span>
+                    <span>{{ s.teacherName }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </section>
+
+        <section>
+          <h2 class="text-lg font-semibold mb-4">Compañeros por Materia</h2>
+          @if (classmates().length === 0) {
+            <div class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-8 text-center">
+              <p class="text-stone-400 dark:text-stone-500">Sin compañeros registrados.</p>
+            </div>
+          } @else {
+            <div class="space-y-4">
+              @for (group of classmates(); track group.subjectName) {
+                <div class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-5">
+                  <p class="text-sm font-medium text-amber-600 dark:text-amber-400 mb-3">{{ group.subjectName }}</p>
+                  <div class="flex flex-wrap gap-2">
+                    @for (name of group.classmateNames; track name) {
+                      <span class="text-xs bg-stone-100 dark:bg-neutral-900 px-3 py-1.5 rounded-full text-stone-600 dark:text-stone-400">
+                        {{ name }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </section>
+      } @else {
+        <div class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-8 text-center">
+          <p class="text-stone-400 dark:text-stone-500">No hay registro académico disponible.</p>
         </div>
-      </div>
+      }
     }
   </main>
 </div>

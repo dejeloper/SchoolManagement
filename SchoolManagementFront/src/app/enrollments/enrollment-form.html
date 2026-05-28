@@ -9,7 +9,7 @@
       <span class="text-amber-500 text-xl">&#9670;</span>
       <span class="text-lg font-semibold tracking-widest">SisTeAca</span>
     </div>
-    <h2 class="text-sm font-medium text-stone-500">Nueva Inscripción</h2>
+    <h2 class="text-sm font-medium text-stone-500">{{ isStudentEnrolling() ? 'Inscribir Materia' : 'Nueva Inscripción' }}</h2>
   </header>
 
   <main class="max-w-lg mx-auto px-8 py-10">
@@ -19,7 +19,7 @@
     } @else {
     <div class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-8">
 
-      <h1 class="text-2xl font-semibold tracking-tight mb-6">Nueva Inscripción</h1>
+      <h1 class="text-2xl font-semibold tracking-tight mb-6">{{ isStudentEnrolling() ? 'Inscribir Materia' : 'Nueva Inscripción' }}</h1>
 
       @if (error()) {
       <div
@@ -29,6 +29,7 @@
 
       <form class="flex flex-col gap-5" (ngSubmit)="submit()">
 
+        @if (!isStudentEnrolling()) {
         <div class="flex flex-col gap-2">
           <label class="text-xs font-medium tracking-widest uppercase text-stone-400">Estudiante</label>
           <select [value]="studentId()" (change)="studentId.set(+$any($event.target).value)"
@@ -39,6 +40,7 @@
             }
           </select>
         </div>
+        }
 
         <div class="flex flex-col gap-2">
           <label class="text-xs font-medium tracking-widest uppercase text-stone-400">Materia</label>

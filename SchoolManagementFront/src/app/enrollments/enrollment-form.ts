@@ -1,9 +1,10 @@
 import {Component, OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {EnrollmentService} from '../../shared/services/enrollment';
 import {StudentService} from '../../shared/services/student';
 import {SubjectService} from '../../shared/services/subject';
+import {AuthService} from '../../shared/services/auth';
 import {Student, Subject} from '../../shared/interfaces/models';
 
 @Component({
@@ -19,27 +20,37 @@ export class EnrollmentFormComponent implements OnInit {
   loading = signal(false);
   saving = signal(false);
   error = signal('');
+  isStudentEnrolling = signal(false);
 
   constructor(
     private enrollmentService: EnrollmentService,
     private studentService: StudentService,
     private subjectService: SubjectService,
+    private auth: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
+    const preSelected = this.route.snapshot.queryParamMap.get('studentId');
+    if (preSelected) {
+      this.isStudentEnrolling.set(true);
+      this.studentId.set(+preSelected);
+    }
     this.loadData();
   }
 
   loadData(): void {
     this.loading.set(true);
-    this.studentService.getAll().subscribe({
-      next: (res) => {
-        if (res.isSuccess && res.value) {
-          this.students.set(res.value);
-        }
-      },
-    });
+    if (!this.isStudentEnrolling()) {
+      this.studentService.getAll().subscribe({
+        next: (res) => {
+          if (res.isSuccess && res.value) {
+            this.students.set(res.value);
+          }
+        },
+      });
+    }
     this.subjectService.getAll().subscribe({
       next: (res) => {
         if (res.isSuccess && res.value) {
@@ -67,7 +78,7 @@ export class EnrollmentFormComponent implements OnInit {
       next: (res) => {
         this.saving.set(false);
         if (res.isSuccess) {
-          this.router.navigate(['/dashboard/enrollments']);
+          this.router.navigate([this.isStudentEnrolling() ? '/dashboard/student' : '/dashboard/enrollments']);
         } else {
           this.error.set(res.message);
         }
@@ -80,6 +91,6 @@ export class EnrollmentFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/dashboard/enrollments']);
+    this.router.navigate([this.isStudentEnrolling() ? '/dashboard/student' : '/dashboard/enrollments']);
   }
 }
