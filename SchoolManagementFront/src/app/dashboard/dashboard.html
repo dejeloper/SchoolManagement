@@ -22,7 +22,20 @@
 
   <main class="max-w-5xl mx-auto px-8 py-12">
     <h1 class="text-3xl font-semibold tracking-tight mb-2">Panel de Administración</h1>
-    <p class="text-sm text-stone-400 dark:text-stone-500 mb-10">Selecciona un módulo para gestionar</p>
+    <p class="text-sm text-stone-400 dark:text-stone-500 mb-8">Selecciona un módulo para gestionar</p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
+      @for (s of stats(); track s.label) {
+        <div class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-neutral-700 rounded-2xl p-4 flex flex-col items-center gap-2">
+          <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl"
+            [style.background]="s.bg" [style.color]="s.color">
+            {{ s.icon }}
+          </div>
+          <p class="text-2xl font-bold" [style.color]="s.color">{{ s.count }}</p>
+          <p class="text-xs text-stone-400 dark:text-stone-500 text-center leading-tight">{{ s.label }}</p>
+        </div>
+      }
+    </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
       @for (card of adminCards; track card.label) {
