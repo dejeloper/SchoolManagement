@@ -47,6 +47,16 @@ CREATE TABLE IF NOT EXISTS enrollments (
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		deleted_at TIMESTAMP NULL 
 );
+
+-- Table: Users
+CREATE TABLE IF NOT EXISTS users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario VARCHAR(100) UNIQUE NOT NULL,
+    rol VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
  
 -- Foreign Keys 
 ALTER TABLE enrollments 
@@ -68,6 +78,9 @@ CREATE INDEX IF NOT EXISTS idx_enrollments_student_id ON enrollments(student_id)
 
 CREATE INDEX IF NOT EXISTS idx_enrollments_subject_id ON enrollments(subject_id); 
 
+CREATE INDEX IF NOT EXISTS idx_users_usuario ON users(usuario);
+
+CREATE INDEX IF NOT EXISTS idx_users_rol ON users(rol);
 
 -- Sample Data Insertion
 -- 10 Students
@@ -104,19 +117,6 @@ INSERT INTO subjects (name, description, teacher_id) VALUES
 ('Química', 'Curso de química orgánica', 4),
 ('Arte', 'Curso de arte contemporáneo', 5),
 ('Música', 'Curso de música clásica', 5);
-
--- Table: Users
-CREATE TABLE IF NOT EXISTS users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    usuario VARCHAR(100) UNIQUE NOT NULL,
-    rol VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_users_usuario ON users(usuario);
-CREATE INDEX IF NOT EXISTS idx_users_rol ON users(rol);
 
 -- 3 Users
 INSERT INTO users (usuario, rol) VALUES
