@@ -8,18 +8,19 @@ export interface ApiResult<T> {
 export interface Student {
   id: number;
   name: string;
+  surname: string;
   email: string;
-  createdAt: string;
 }
 
 export interface CreateStudentDto {
   name: string;
+  surname: string;
   email: string;
 }
 
 export interface UpdateStudentDto {
-  name: string;
-  email: string;
+  name?: string;
+  surname?: string;
 }
 
 export interface Teacher {

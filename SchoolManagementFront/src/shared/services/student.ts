@@ -1,31 +1,31 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { ApiResult, Student, CreateStudentDto, UpdateStudentDto } from '../interfaces/models';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {ApiResult, Student, CreateStudentDto, UpdateStudentDto} from '../interfaces/models';
+import {ApiService} from '../api.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class StudentService {
-  private readonly url = 'http://localhost:5000/api/students';
+  private readonly path = '/students';
 
-  constructor(private http: HttpClient) { }
+  constructor(private api: ApiService) { }
 
   getAll(): Observable<ApiResult<Student[]>> {
-    return this.http.get<ApiResult<Student[]>>(this.url);
+    return this.api.get<Student[]>(this.path);
   }
 
   getById(id: number): Observable<ApiResult<Student>> {
-    return this.http.get<ApiResult<Student>>(`${this.url}/${id}`);
+    return this.api.get<Student>(`${this.path}/${id}`);
   }
 
   create(dto: CreateStudentDto): Observable<ApiResult<Student>> {
-    return this.http.post<ApiResult<Student>>(this.url, dto);
+    return this.api.post<Student>(this.path, dto);
   }
 
   update(id: number, dto: UpdateStudentDto): Observable<ApiResult<Student>> {
-    return this.http.put<ApiResult<Student>>(`${this.url}/${id}`, dto);
+    return this.api.put<Student>(`${this.path}/${id}`, dto);
   }
 
   delete(id: number): Observable<ApiResult<null>> {
-    return this.http.delete<ApiResult<null>>(`${this.url}/${id}`);
+    return this.api.delete<null>(`${this.path}/${id}`);
   }
 }
