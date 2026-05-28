@@ -1,10 +1,10 @@
-# 🎓 SchoolManagement
+# 🎓 Sistema de Gestión Académica (SchoolManagement)
 
 Un sistema completo de gestión escolar con backend en **ASP.NET Core 8** y frontend en **Angular 21**.
 
 ## 📋 ¿De qué se trata?
 
-SchoolManagement es una plataforma para la gestión académica de instituciones educativas que permite:
+'SchoolManagement' es una plataforma para la gestión académica de instituciones educativas que permite:
 
 - Administrar estudiantes, docentes y materias
 - Gestionar inscripciones de estudiantes a materias
