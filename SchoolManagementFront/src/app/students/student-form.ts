@@ -47,9 +47,9 @@ export class StudentFormComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Error al cargar estudiante.');
+        this.error.set(err.error?.message || 'Error al cargar estudiante.');
       },
     });
   }
@@ -71,9 +71,9 @@ export class StudentFormComponent implements OnInit {
             this.error.set(res.message);
           }
         },
-        error: () => {
+        error: (err) => {
           this.saving.set(false);
-          this.error.set('Error al actualizar estudiante.');
+          this.error.set(err.error?.message || 'Error al actualizar estudiante.');
         },
       });
     } else {
@@ -87,9 +87,9 @@ export class StudentFormComponent implements OnInit {
             this.error.set(res.message);
           }
         },
-        error: () => {
+        error: (err) => {
           this.saving.set(false);
-          this.error.set('Error al crear estudiante.');
+          this.error.set(err.error?.message || 'Error al crear estudiante.');
         },
       });
     }

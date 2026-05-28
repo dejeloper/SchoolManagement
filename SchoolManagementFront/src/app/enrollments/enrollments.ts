@@ -46,9 +46,9 @@ export class EnrollmentsComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Error al cargar inscripciones.');
+        this.error.set(err.error?.message || 'Error al cargar inscripciones.');
       },
     });
   }
@@ -73,7 +73,7 @@ export class EnrollmentsComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => this.error.set('Error al eliminar inscripción.'),
+      error: (err) => this.error.set(err.error?.message || 'Error al eliminar inscripción.'),
     });
   }
 

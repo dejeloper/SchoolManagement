@@ -44,9 +44,9 @@ export class UsersComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Error al cargar usuarios.');
+        this.error.set(err.error?.message || 'Error al cargar usuarios.');
       },
     });
   }
@@ -75,7 +75,7 @@ export class UsersComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => this.error.set('Error al eliminar usuario.'),
+      error: (err) => this.error.set(err.error?.message || 'Error al eliminar usuario.'),
     });
   }
 

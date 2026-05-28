@@ -47,9 +47,9 @@ export class TeacherFormComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Error al cargar profesor.');
+        this.error.set(err.error?.message || 'Error al cargar profesor.');
       },
     });
   }
@@ -71,9 +71,9 @@ export class TeacherFormComponent implements OnInit {
             this.error.set(res.message);
           }
         },
-        error: () => {
+        error: (err) => {
           this.saving.set(false);
-          this.error.set('Error al actualizar profesor.');
+          this.error.set(err.error?.message || 'Error al actualizar profesor.');
         },
       });
     } else {
@@ -87,9 +87,9 @@ export class TeacherFormComponent implements OnInit {
             this.error.set(res.message);
           }
         },
-        error: () => {
+        error: (err) => {
           this.saving.set(false);
-          this.error.set('Error al crear profesor.');
+          this.error.set(err.error?.message || 'Error al crear profesor.');
         },
       });
     }

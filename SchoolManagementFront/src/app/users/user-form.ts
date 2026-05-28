@@ -45,9 +45,9 @@ export class UserFormComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Error al cargar usuario.');
+        this.error.set(err.error?.message || 'Error al cargar usuario.');
       },
     });
   }
@@ -69,9 +69,9 @@ export class UserFormComponent implements OnInit {
             this.error.set(res.message);
           }
         },
-        error: () => {
+        error: (err) => {
           this.saving.set(false);
-          this.error.set('Error al actualizar usuario.');
+          this.error.set(err.error?.message || 'Error al actualizar usuario.');
         },
       });
     } else {
@@ -85,9 +85,9 @@ export class UserFormComponent implements OnInit {
             this.error.set(res.message);
           }
         },
-        error: () => {
+        error: (err) => {
           this.saving.set(false);
-          this.error.set('Error al crear usuario.');
+          this.error.set(err.error?.message || 'Error al crear usuario.');
         },
       });
     }

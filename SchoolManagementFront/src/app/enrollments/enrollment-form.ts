@@ -47,9 +47,9 @@ export class EnrollmentFormComponent implements OnInit {
         }
         this.loading.set(false);
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Error al cargar datos.');
+        this.error.set(err.error?.message || 'Error al cargar datos.');
       },
     });
   }

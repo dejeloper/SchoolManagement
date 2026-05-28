@@ -44,9 +44,9 @@ export class StudentsComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Error al cargar estudiantes.');
+        this.error.set(err.error?.message || 'Error al cargar estudiantes.');
       },
     });
   }
@@ -75,7 +75,7 @@ export class StudentsComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => this.error.set('Error al eliminar estudiante.'),
+      error: (err) => this.error.set(err.error?.message || 'Error al eliminar estudiante.'),
     });
   }
 

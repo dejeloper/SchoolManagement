@@ -69,9 +69,9 @@ export class SubjectFormComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Error al cargar materia.');
+        this.error.set(err.error?.message || 'Error al cargar materia.');
       },
     });
   }
@@ -98,9 +98,9 @@ export class SubjectFormComponent implements OnInit {
             this.error.set(res.message);
           }
         },
-        error: () => {
+        error: (err) => {
           this.saving.set(false);
-          this.error.set('Error al actualizar materia.');
+          this.error.set(err.error?.message || 'Error al actualizar materia.');
         },
       });
     } else {
@@ -119,9 +119,9 @@ export class SubjectFormComponent implements OnInit {
             this.error.set(res.message);
           }
         },
-        error: () => {
+        error: (err) => {
           this.saving.set(false);
-          this.error.set('Error al crear materia.');
+          this.error.set(err.error?.message || 'Error al crear materia.');
         },
       });
     }

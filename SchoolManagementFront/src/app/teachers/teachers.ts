@@ -44,9 +44,9 @@ export class TeachersComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Error al cargar profesores.');
+        this.error.set(err.error?.message || 'Error al cargar profesores.');
       },
     });
   }
@@ -75,7 +75,7 @@ export class TeachersComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => this.error.set('Error al eliminar profesor.'),
+      error: (err) => this.error.set(err.error?.message || 'Error al eliminar profesor.'),
     });
   }
 

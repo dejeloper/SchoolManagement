@@ -84,9 +84,9 @@ export class LoginComponent {
           this.error.set(res.message || 'Correo no encontrado.');
         }
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('No se pudo conectar con el servidor.');
+        this.error.set(err.error?.message || 'No se pudo conectar con el servidor.');
       },
     });
   }

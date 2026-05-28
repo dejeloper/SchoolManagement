@@ -44,9 +44,9 @@ export class SubjectsComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Error al cargar materias.');
+        this.error.set(err.error?.message || 'Error al cargar materias.');
       },
     });
   }
@@ -75,7 +75,7 @@ export class SubjectsComponent implements OnInit {
           this.error.set(res.message);
         }
       },
-      error: () => this.error.set('Error al eliminar materia.'),
+      error: (err) => this.error.set(err.error?.message || 'Error al eliminar materia.'),
     });
   }
 
