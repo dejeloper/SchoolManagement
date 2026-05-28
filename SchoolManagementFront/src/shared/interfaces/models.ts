@@ -68,11 +68,9 @@ export interface UpdateSubjectDto {
 export interface Enrollment {
   id: number;
   studentId: number;
-  subjectId: number;
   studentName: string;
+  subjectId: number;
   subjectName: string;
-  teacherName: string;
-  credits: number;
   createdAt: string;
 }
 
@@ -81,16 +79,17 @@ export interface CreateEnrollmentDto {
   subjectId: number;
 }
 
-export interface EnrollmentDetail {
+export interface SubjectEnrollment {
+  subjectId: number;
   subjectName: string;
-  credits: number;
   teacherName: string;
+  credits: number;
 }
 
 export interface StudentAcademicRecord {
   studentId: number;
   studentName: string;
-  enrollments: EnrollmentDetail[];
+  subjects: SubjectEnrollment[];
   totalCredits: number;
 }
 
