@@ -199,6 +199,11 @@ public class SubjectService(AppDbContext context) : ISubjectService
                 subject.TeacherId = updateSubjectDto.TeacherId;
             }
 
+            if (updateSubjectDto.Credits > 0)
+            {
+                subject.Credits = updateSubjectDto.Credits;
+            }
+
             subject.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
