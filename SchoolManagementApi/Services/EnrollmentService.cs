@@ -301,20 +301,29 @@ public class EnrollmentService(AppDbContext context) : IEnrollmentService
                 );
             }
 
-            var classmates = await _context.Enrollments
+            var rawEnrollments = await _context.Enrollments
                 .Where(e => subjectIds.Contains(e.SubjectId) && e.StudentId != studentId)
-                .GroupBy(e => new { e.SubjectId, e.Subject.Name })
+                .Select(e => new
+                {
+                    e.SubjectId,
+                    SubjectName = e.Subject.Name,
+                    StudentName = e.Student.Name + " " + e.Student.Surname
+                })
+                .ToListAsync();
+
+            var classmates = rawEnrollments
+                .GroupBy(e => new { e.SubjectId, e.SubjectName })
                 .Select(g => new ClassmatesBySubjectDto
                 {
                     SubjectId = g.Key.SubjectId,
-                    SubjectName = g.Key.Name,
-                    ClassmateNames = g.Select(x => x.Student.Name + " " + x.Student.Surname)
+                    SubjectName = g.Key.SubjectName,
+                    ClassmateNames = g.Select(x => x.StudentName)
                         .Distinct()
                         .OrderBy(name => name)
                         .ToList()
                 })
                 .OrderBy(c => c.SubjectName)
-                .ToListAsync();
+                .ToList();
 
             return Result<List<ClassmatesBySubjectDto>>.Success(
                 classmates,
