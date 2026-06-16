@@ -1,4 +1,4 @@
-# Backend — SchoolManagement API
+# Backend — SchoolManagement API (.NET)
 
 API REST con **ASP.NET Core 8**, **Entity Framework Core**, **MySQL**.
 

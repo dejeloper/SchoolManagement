@@ -1,6 +1,17 @@
 # 🎓 Sistema de Gestión Académica (SchoolManagement)
 
-Un sistema completo de gestión escolar con backend en **ASP.NET Core 8** y frontend en **Angular 21**.
+Un sistema completo de gestión escolar con backend en **NestJS (Node.js)** (por defecto) y **ASP.NET Core 8**, y frontend en **Angular 21**.
+
+### Base de Datos
+
+El backend **Node.js** usa **SQLite** (archivo local, no requiere instalación de motor de base de datos).  
+El backend **.NET** usa **MySQL** — ejecutar `script.sql` para crearla:
+
+```bash
+mysql -u <usuario> -p < script.sql
+```
+
+---
 
 ## 📋 ¿De qué se trata?
 
@@ -13,10 +24,11 @@ Un sistema completo de gestión escolar con backend en **ASP.NET Core 8** y fron
 
 **Stack tecnológico:**
 
-- **Backend:** ASP.NET Core 8 (C# 12)
+- **Backend (Node.js):** NestJS 11 (TypeScript) con Prisma ORM - *API principal (por defecto)*
+- **Backend (.NET):** ASP.NET Core 8 (C# 12) - *API alternativa*
 - **Frontend:** Angular 21 (TypeScript 5.9)
-- **Base de datos:** MySQL
-- **ORM:** Entity Framework Core
+- **Base de datos:** SQLite (Node.js) / MySQL (.NET)
+- **ORM:** Prisma (Node.js) / Entity Framework Core (.NET)
 
 ---
 
@@ -24,32 +36,38 @@ Un sistema completo de gestión escolar con backend en **ASP.NET Core 8** y fron
 
 ### Requisitos previos
 
-- **.NET 8** (para el backend)
-- **Node.js 18+** (para Angular)
-- **MySQL 8.0+** o MariaDB instalado
+- **Node.js 18+** (para Angular y backend Node.js)
+- **pnpm** (para el backend Node.js)
+- **.NET 8** (solo para el backend .NET)
+- **MySQL 8.0+** (solo para el backend .NET)
 
-### 1️⃣ Base de Datos
+### 1️⃣ Backend (Node.js) — Por defecto
 
 ```bash
-# Conectarse a MySQL
-mysql -u <usuario> -p
+# Navegar a la carpeta del backend Node.js
+cd SchoolManagementApiNode
 
-# Ejecutar el script SQL desde el cliente
-SOURCE script.sql;
+# Instalar dependencias
+pnpm install
+
+# Generar el cliente de Prisma
+pnpm prisma:generate
+
+# Ejecutar migraciones (crea la DB SQLite automáticamente)
+pnpm prisma:migrate
+
+# Iniciar en modo desarrollo
+pnpm start:dev
 ```
 
-O desde la terminal:
+El API estará disponible en: **http://localhost:3010**
+
+Ver documentación del backend Node.js en → [`documentation/BACKEND_NODE.md`](documentation/BACKEND_NODE.md)
+
+### 2️⃣ Backend (.NET) — Alternativa
 
 ```bash
-mysql -u <usuario> -p < script.sql
-```
-
-Esto creará la base de datos `school_management` con todas las tablas y datos de ejemplo.
-
-### 2️⃣ Backend
-
-```bash
-# Navegar a la carpeta del backend
+# Navegar a la carpeta del backend .NET
 cd SchoolManagementApi
 
 # Restaurar dependencias
@@ -61,7 +79,7 @@ dotnet run
 
 El API estará disponible en: **http://localhost:5206**
 
-Ver documentación completa del backend en → [`documentation/BACKEND.md`](documentation/BACKEND.md)
+Ver documentación del backend .NET en → [`documentation/BACKEND.md`](documentation/BACKEND.md)
 
 ### 3️⃣ Frontend
 
@@ -126,16 +144,18 @@ Ver documentación completa del frontend en → [`documentation/FRONTEND.md`](do
 
 ## 📚 Documentación
 
-- **[Backend](documentation/BACKEND.md)** - Arquitectura, endpoints, DTOs, validaciones
+- **[Backend (Node.js)](documentation/BACKEND_NODE.md)** - Arquitectura, endpoints, DTOs, validaciones
+- **[Backend (.NET)](documentation/BACKEND.md)** - Arquitectura, endpoints, DTOs, validaciones
 - **[Frontend](documentation/FRONTEND.md)** - Estructura del proyecto, componentes, integración con API
 
 ---
 
 ## 🔗 Enlaces útiles
 
-- **Swagger API:** http://localhost:5206/swagger/index.html
+- **Swagger API (Node.js):** http://localhost:3010/api
+- **Swagger API (.NET):** http://localhost:5206/swagger/index.html
 - **Aplicación frontend:** http://localhost:4200
-- **Database:** `school_management` en MySQL
+- **Database:** SQLite (`SchoolManagementApiNode/prisma/dev.db`) / MySQL (`school_management`)
 
 ---
 
